@@ -35,8 +35,7 @@ import com.salesmanager.core.model.tax.taxclass.TaxClass;
 import com.salesmanager.core.model.tax.taxrate.TaxRate;
 
 @Service("taxService")
-public class TaxServiceImpl 
-		implements TaxService {
+public class TaxServiceImpl implements TaxService {
 	
 	private final static String TAX_CONFIGURATION = "TAX_CONFIG";
 	private final static String DEFAULT_TAX_CLASS = "DEFAULT";

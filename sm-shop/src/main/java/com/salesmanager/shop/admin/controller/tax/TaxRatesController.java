@@ -66,7 +66,8 @@ public class TaxRatesController {
 	
 	@Inject
 	private ZoneService zoneService;
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value={"/admin/tax/taxrates/list.html"}, method=RequestMethod.GET)
 	public String displayTaxRates(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -101,7 +102,8 @@ public class TaxRatesController {
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxRates;
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	@SuppressWarnings("unchecked")
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value = "/admin/tax/taxrates/page.html", method = RequestMethod.POST)
@@ -179,7 +181,8 @@ public class TaxRatesController {
 	    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxrates/save.html", method=RequestMethod.POST)
 	public String saveTaxRate(@Valid @ModelAttribute("taxRate") TaxRate taxRate, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
@@ -212,9 +215,9 @@ public class TaxRatesController {
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxRates;
 		
 	}
-	
-	
-	
+
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxrates/update.html", method=RequestMethod.POST)
 	public String updateTaxRate(@Valid @ModelAttribute("taxRate") TaxRate taxRate, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
@@ -249,7 +252,8 @@ public class TaxRatesController {
 
 		
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	private void validateTaxRate(Model model, TaxRate taxRate, BindingResult result, MerchantStore store, Language language, Locale locale) throws Exception {
 		
 
@@ -322,8 +326,8 @@ public class TaxRatesController {
 		return;
 		
 	}
-	
 
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxrates/remove.html", method=RequestMethod.POST)
 	public @ResponseBody ResponseEntity<String> removeTaxRate(HttpServletRequest request, Locale locale) throws Exception {
@@ -392,7 +396,8 @@ public class TaxRatesController {
 		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 		
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxrates/edit.html", method=RequestMethod.GET)
 	public String editTaxRate(@ModelAttribute("id") String id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {

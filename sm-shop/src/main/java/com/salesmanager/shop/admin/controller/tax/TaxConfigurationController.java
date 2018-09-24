@@ -5,6 +5,8 @@ import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.tax.TaxConfiguration;
 import com.salesmanager.shop.admin.model.web.Menu;
 import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.restclients.TaxServiceClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +28,12 @@ public class TaxConfigurationController {
 	
 	@Inject
 	private TaxService taxService = null;
-	
-	
+
+	@Autowired
+	private TaxServiceClient taxServiceClient;
+
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value={"/admin/tax/taxconfiguration/edit.html"}, method=RequestMethod.GET)
 	public String displayTaxConfiguration(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -47,7 +53,8 @@ public class TaxConfigurationController {
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxConfiguration;
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxconfiguration/save.html", method=RequestMethod.POST)
 	public String saveTaxConfiguration(@Valid @ModelAttribute("taxConfiguration") TaxConfiguration taxConfiguration, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {

@@ -64,7 +64,8 @@ public class TaxClassController {
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClasses;
 	}
 	
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value = "/admin/tax/taxclass/paging.html", method = RequestMethod.POST)
 	public @ResponseBody
@@ -100,7 +101,8 @@ public class TaxClassController {
 	    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/save.html", method=RequestMethod.POST)
 	public String saveTaxClass(@Valid @ModelAttribute("taxClass") TaxClass taxClass, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
@@ -138,8 +140,8 @@ public class TaxClassController {
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClasses;
 		
 	}
-	
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/update.html", method=RequestMethod.POST)
 	public String updateTaxClass(@Valid @ModelAttribute("taxClass") TaxClass taxClass, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
@@ -177,8 +179,8 @@ public class TaxClassController {
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClass;
 		
 	}
-	
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/remove.html", method=RequestMethod.POST)
 	public @ResponseBody ResponseEntity<String> removeTaxClass(HttpServletRequest request, Locale locale) throws Exception {
@@ -255,7 +257,8 @@ public class TaxClassController {
 		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 		
 	}
-	
+
+	//TODO: candidate for extraction to tax-service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/edit.html", method=RequestMethod.GET)
 	public String editTaxClass(@ModelAttribute("id") String id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
@@ -299,8 +302,7 @@ public class TaxClassController {
 		activeMenus.put("taxclass", "taxclass");
 		
 		@SuppressWarnings("unchecked")
-		Map<String, Menu> menus = (Map<String, Menu>) request
-				.getAttribute("MENUMAP");
+		Map<String, Menu> menus = (Map<String, Menu>) request.getAttribute("MENUMAP");
 		
 		Menu currentMenu = (Menu) menus.get("tax");
 		model.addAttribute("currentMenu", currentMenu);

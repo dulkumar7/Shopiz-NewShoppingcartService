@@ -30,6 +30,7 @@ import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.facebook.security.FacebookAuthenticationService;
 import org.springframework.social.security.SocialAuthenticationServiceLocator;
 import org.springframework.social.security.SocialAuthenticationServiceRegistry;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
@@ -137,9 +138,9 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 
     }
 
-
-    
-    
-
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 }
