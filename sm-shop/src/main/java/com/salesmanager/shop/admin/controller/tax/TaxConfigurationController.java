@@ -41,8 +41,8 @@ public class TaxConfigurationController {
 		setMenu(model, request);
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
-		
-		TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(store);
+		//TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(store);
+		TaxConfiguration taxConfiguration = taxServiceClient.getTaxConfiguration(store);
 		if(taxConfiguration == null) {
 			
 			taxConfiguration = new TaxConfiguration();
@@ -54,7 +54,7 @@ public class TaxConfigurationController {
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxConfiguration;
 	}
 
-	//TODO: candidate for extraction to tax-service
+	//TODO: candidate for extraction to tax-service -- *Merchant is backing service
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxconfiguration/save.html", method=RequestMethod.POST)
 	public String saveTaxConfiguration(@Valid @ModelAttribute("taxConfiguration") TaxConfiguration taxConfiguration, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
@@ -64,6 +64,7 @@ public class TaxConfigurationController {
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
 		taxService.saveTaxConfiguration(taxConfiguration, store);
+		//taxServiceClient.saveTaxConfiguration(taxConfiguration, store);
 		
 		model.addAttribute("success","success");
 		

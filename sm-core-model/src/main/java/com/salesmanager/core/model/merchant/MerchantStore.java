@@ -35,7 +35,8 @@ import com.salesmanager.core.utils.CloneUtils;
 
 @Entity
 @Table(name = "MERCHANT_STORE", schema=SchemaConstant.SALESMANAGER_SCHEMA)
-public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
+public class
+MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 	private static final long serialVersionUID = 7671103335743647655L;
 	
 	

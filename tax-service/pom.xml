@@ -23,10 +23,23 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<simple-json-version>1.1.1</simple-json-version>
-		<shopizer-version>2.2.0-SNAPSHOT</shopizer-version>
+		<!--<shopizer-version>2.2.0-SNAPSHOT</shopizer-version>-->
 	</properties>
 
 	<dependencies>
+
+		<!--<dependency>
+			<groupId>com.shopizer</groupId>
+			<artifactId>sm-core-model</artifactId>
+			<version>${shopizer-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.shopizer</groupId>
+			<artifactId>sm-core</artifactId>
+			<version>${shopizer-version}</version>
+		</dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -52,20 +65,9 @@
 			<artifactId>json-simple</artifactId>
 			<version>${simple-json-version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.shopizer</groupId>
-			<artifactId>sm-core-model</artifactId>
-			<version>${shopizer-version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.shopizer</groupId>
-			<artifactId>sm-core</artifactId>
-			<version>${shopizer-version}</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
 
+
+	</dependencies>
 
 	<build>
 		<plugins>

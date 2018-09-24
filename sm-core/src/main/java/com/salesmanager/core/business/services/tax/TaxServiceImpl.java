@@ -52,8 +52,6 @@ public class TaxServiceImpl implements TaxService {
 	@Override
 	public TaxConfiguration getTaxConfiguration(MerchantStore store) throws ServiceException {
 		
-		
-		
 		MerchantConfiguration configuration = merchantConfigurationService.getMerchantConfiguration(TAX_CONFIGURATION, store);
 		TaxConfiguration taxConfiguration = null;
 		if(configuration!=null) {
@@ -78,11 +76,11 @@ public class TaxServiceImpl implements TaxService {
 		if(configuration==null) {
 			configuration = new MerchantConfiguration();
 			configuration.setMerchantStore(store);
-			configuration.setKey(TAX_CONFIGURATION);
+			configuration.setKey(TAX_CONFIGURATION); //mapped
 		}
 		
 		String value = shippingConfiguration.toJSONString();
-		configuration.setValue(value);
+		configuration.setValue(value); //maped
 		merchantConfigurationService.saveOrUpdate(configuration);
 		
 	}

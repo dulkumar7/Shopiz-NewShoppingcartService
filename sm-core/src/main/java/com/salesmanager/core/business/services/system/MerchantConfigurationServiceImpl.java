@@ -17,9 +17,8 @@ import com.salesmanager.core.model.system.MerchantConfiguration;
 import com.salesmanager.core.model.system.MerchantConfigurationType;
 
 @Service("merchantConfigurationService")
-public class MerchantConfigurationServiceImpl extends
-		SalesManagerEntityServiceImpl<Long, MerchantConfiguration> implements
-		MerchantConfigurationService {
+public class MerchantConfigurationServiceImpl extends SalesManagerEntityServiceImpl<Long, MerchantConfiguration> implements
+		                                              MerchantConfigurationService {
 
 	private MerchantConfigurationRepository merchantConfigurationRepository;
 	
