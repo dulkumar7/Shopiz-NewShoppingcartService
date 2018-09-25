@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/tax/taxconfiguration")
+@RequestMapping("/rest/admin/tax/taxconfiguration")
 public class TaxConfigurationRestController {
 
     private TaxService taxService;

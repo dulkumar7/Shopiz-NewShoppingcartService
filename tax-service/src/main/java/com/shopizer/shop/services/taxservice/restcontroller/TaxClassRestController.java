@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin/tax/taxclass")
+@RequestMapping("/rest/admin/tax/taxclass")
 public class TaxClassRestController {
 
     @PostMapping("/getclass")
