@@ -1,5 +1,6 @@
 package com.shopizer.shop.services.taxservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shopizer.shop.services.taxservice.constants.TaxServiceConstants;
 
 import javax.persistence.*;
@@ -33,10 +34,12 @@ public class Language extends SalesManagerEntity<Integer, Language> implements A
 
     @SuppressWarnings("unused")
     @OneToMany(mappedBy = "defaultLanguage", targetEntity = MerchantStore.class)
+    @JsonBackReference(value = "defaultLanguage")
     private List<MerchantStore> storesDefaultLanguage;
 
     @SuppressWarnings("unused")
     @ManyToMany(mappedBy = "languages", targetEntity = MerchantStore.class)
+    @JsonBackReference(value = "languages")
     private List<MerchantStore> stores = new ArrayList<MerchantStore>();
 
     public Language() {

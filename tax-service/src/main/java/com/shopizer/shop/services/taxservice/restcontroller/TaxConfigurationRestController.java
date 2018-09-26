@@ -1,5 +1,8 @@
 package com.shopizer.shop.services.taxservice.restcontroller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopizer.shop.services.taxservice.model.MerchantConfiguration;
 import com.shopizer.shop.services.taxservice.model.MerchantStore;
 import com.shopizer.shop.services.taxservice.model.TaxConfiguration;
@@ -9,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,15 +33,44 @@ public class TaxConfigurationRestController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity saveTaxConfiguration(@RequestBody Map reqBody) {
-        TaxConfiguration taxConfiguration = (TaxConfiguration) reqBody.get("taxConfiguration");
-        MerchantStore merchantStore = (MerchantStore) reqBody.get("merchantStore");
+    public ResponseEntity saveTaxConfiguration(@RequestBody Map<String, String> reqBody) {
+
+        TaxConfiguration taxConfiguration = (TaxConfiguration) convertJsonToObject(reqBody.get("taxConfiguration").trim(), TaxConfiguration.class);
+        MerchantStore merchantStore = (MerchantStore) convertJsonToObject(reqBody.get("merchantStore").trim(), MerchantStore.class);
+
         if(taxConfiguration != null && merchantStore != null) {
             MerchantConfiguration returnValue  = taxService.saveTaxConfiguration(taxConfiguration, merchantStore);
             if(returnValue != null) {
-                return new ResponseEntity<>(returnValue, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(new MerchantConfiguration(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    private Object convertJsonToObject(String jsonInput, Class<?> classType) {
+        ObjectMapper mapper = new ObjectMapper();
+        Object output = null;
+        try {
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            output = mapper.readValue(jsonInput, classType);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return output;
+    }
+    
+    private String convertObjectToString(Object input) {
+        ObjectMapper mapper = new ObjectMapper();
+        String output = null;
+        try {
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            output = mapper.writeValueAsString(input);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return (output == null ? "": output);
+    }
+
 }

@@ -53,11 +53,9 @@ public class TaxService {
 
         String value = shippingConfiguration.toJSONString();
         merchantConfiguration.setValue(value); //maped
-        MerchantConfiguration createdConfig = taxMerchantConfigRepository.save(merchantConfiguration);
-        if(createdConfig == null) {
-            return createdConfig;
-        }
-        return null;
+        
+        MerchantConfiguration createdConfig = taxMerchantConfigRepository.saveAndFlush(merchantConfiguration);
+        return createdConfig;
 
     }
 

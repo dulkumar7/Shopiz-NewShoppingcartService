@@ -41,8 +41,8 @@ public class TaxConfigurationController {
 		setMenu(model, request);
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
-		//TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(store);
-		TaxConfiguration taxConfiguration = taxServiceClient.getTaxConfiguration(store);
+		TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(store);
+		//TaxConfiguration taxConfiguration = taxServiceClient.getTaxConfiguration(store);
 		if(taxConfiguration == null) {
 			
 			taxConfiguration = new TaxConfiguration();

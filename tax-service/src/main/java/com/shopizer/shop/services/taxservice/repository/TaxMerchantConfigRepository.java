@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TaxMerchantConfigRepository extends JpaRepository<MerchantConfiguration, Integer> {
+public interface TaxMerchantConfigRepository extends JpaRepository<MerchantConfiguration, Long> {
 
     /*@Query("select merchantConfigValue from TaxConfigEntity where taxConfigKey=:taxConfigKey and storeId=:storeId")
     public String getTaxConfigurationForMerchant(@Param("taxConfigKey") String taxConfigKey, @Param("storeId") String storeId);

@@ -1,5 +1,6 @@
 package com.shopizer.shop.services.taxservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shopizer.shop.services.taxservice.constants.TaxServiceConstants;
 import org.hibernate.annotations.Type;
 
@@ -8,7 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
-@Table(name = "MERCHANT_CONFIGURATION", schema = TaxServiceConstants.DB_SCHEMA_NAME, uniqueConstraints=
+@Table(name = "MERCHANT_CONFIGURATION", schema= TaxServiceConstants.DB_SCHEMA_NAME, uniqueConstraints=
 @UniqueConstraint(columnNames = {"MERCHANT_ID", "CONFIG_KEY"}))
 public class MerchantConfiguration extends SalesManagerEntity<Long, MerchantConfiguration> implements Serializable, Auditable {
 
@@ -25,6 +26,7 @@ public class MerchantConfiguration extends SalesManagerEntity<Long, MerchantConf
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="MERCHANT_ID", nullable=true)
+    @JsonBackReference(value = "MERCHANT_ID")
     private MerchantStore merchantStore;
 
     @Embedded
@@ -35,12 +37,13 @@ public class MerchantConfiguration extends SalesManagerEntity<Long, MerchantConf
 
 
     @Column(name="VALUE")
-    //@Type(type = "org.hibernate.type.StringClobType")
     private String value;
 
     @Column(name="TYPE")
     @Enumerated(value = EnumType.STRING)
     private MerchantConfigurationType merchantConfigurationType = MerchantConfigurationType.INTEGRATION;
+    
+    public MerchantConfiguration() {}
 
     public void setKey(String key) {
         this.key = key;

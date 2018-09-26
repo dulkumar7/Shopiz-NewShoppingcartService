@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -75,10 +76,12 @@ MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
 	@JoinColumn(name="COUNTRY_ID", nullable=false, updatable=true)
+	@JsonBackReference(value = "COUNTRY_ID")
 	private Country country;
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Zone.class)
 	@JoinColumn(name="ZONE_ID", nullable=true, updatable=true)
+	@JsonBackReference(value = "ZONE_ID")
 	private Zone zone;
 
 	@Column(name = "STORE_STATE_PROV", length=100)
@@ -99,11 +102,13 @@ MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "LANGUAGE_ID", nullable=false)
+	@JsonBackReference(value = "LANGUAGE_ID")
 	private Language defaultLanguage;
 
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "MERCHANT_LANGUAGE")
+	@JsonBackReference(value = "MERCHANT_LANGUAGE")
 	private List<Language> languages = new ArrayList<Language>();
 	
 	@Column(name = "USE_CACHE")
@@ -131,6 +136,7 @@ MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 	
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Currency.class)
 	@JoinColumn(name = "CURRENCY_ID", nullable=false)
+	@JsonBackReference(value = "CURRENCY_ID")
 	private Currency currency;
 	
 	@Column(name = "CURRENCY_FORMAT_NATIONAL")

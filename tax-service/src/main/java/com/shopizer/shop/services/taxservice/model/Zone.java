@@ -1,5 +1,6 @@
 package com.shopizer.shop.services.taxservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shopizer.shop.services.taxservice.constants.TaxServiceConstants;
 
 import javax.persistence.*;

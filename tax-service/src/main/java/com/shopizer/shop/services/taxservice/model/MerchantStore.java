@@ -1,6 +1,7 @@
 package com.shopizer.shop.services.taxservice.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shopizer.shop.services.taxservice.constants.TaxServiceConstants;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -13,8 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "MERCHANT_STORE", schema= TaxServiceConstants.DB_SCHEMA_NAME)
-public class
-MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
+public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
     private static final long serialVersionUID = 7671103335743647655L;
 
 
@@ -53,10 +53,12 @@ MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
     @JoinColumn(name="COUNTRY_ID", nullable=false, updatable=true)
+    @JsonBackReference(value = "COUNTRY_ID")
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Zone.class)
     @JoinColumn(name="ZONE_ID", nullable=true, updatable=true)
+    @JsonBackReference(value = "ZONE_ID")
     private Zone zone;
 
     @Column(name = "STORE_STATE_PROV", length=100)
@@ -77,11 +79,13 @@ MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
     @JoinColumn(name = "LANGUAGE_ID", nullable=false)
+    @JsonBackReference(value = "LANGUAGE_ID")
     private Language defaultLanguage;
 
     @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "MERCHANT_LANGUAGE")
+    @JsonBackReference(value = "MERCHANT_LANGUAGE")
     private List<Language> languages = new ArrayList<Language>();
 
     @Column(name = "USE_CACHE")
@@ -109,6 +113,7 @@ MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Currency.class)
     @JoinColumn(name = "CURRENCY_ID", nullable=false)
+    @JsonBackReference(value = "CURRENCY_ID")
     private Currency currency;
 
     @Column(name = "CURRENCY_FORMAT_NATIONAL")
