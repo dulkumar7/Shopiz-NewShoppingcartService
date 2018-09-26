@@ -4,20 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.system.MerchantConfiguration;
 import com.salesmanager.core.model.tax.TaxConfiguration;
-import com.salesmanager.shop.dto.MerchantStoreDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -57,11 +51,5 @@ public class TaxServiceClient {
         }
         return (output == null ? "": output);
     }
-
-    private MerchantStoreDto convertToDto(MerchantStore store) {
-        MerchantStoreDto storeDto = modelMapper.map(store, MerchantStoreDto.class);
-        return storeDto;
-    }
-
 
 }
