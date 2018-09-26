@@ -73,7 +73,7 @@ public class TaxServiceImpl implements TaxService {
 		
 		MerchantConfiguration configuration = merchantConfigurationService.getMerchantConfiguration(TAX_CONFIGURATION, store);
 
-		if(configuration==null) {
+		if(configuration == null) {
 			configuration = new MerchantConfiguration();
 			configuration.setMerchantStore(store);
 			configuration.setKey(TAX_CONFIGURATION); //mapped

@@ -63,8 +63,8 @@ public class TaxConfigurationController {
 		setMenu(model, request);
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
-		taxService.saveTaxConfiguration(taxConfiguration, store);
-		//taxServiceClient.saveTaxConfiguration(taxConfiguration, store);
+		//taxService.saveTaxConfiguration(taxConfiguration, store);
+		taxServiceClient.saveTaxConfiguration(taxConfiguration, store);
 		
 		model.addAttribute("success","success");
 		

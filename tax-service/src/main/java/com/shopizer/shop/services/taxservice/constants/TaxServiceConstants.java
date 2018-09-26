@@ -12,4 +12,7 @@ public class TaxServiceConstants {
     public static final String SWAGGER_TEAM_EMAIL_LIST = "hamidou.barry@email.com";
     public static final String SWAGGER_APP_LICENCE = "Free Licence";
     public static final String SWAGGER_APP_LICENCE_URL = "http://freelicence.url.poc.net";
+
+    //DATABASE CONSTANTS
+    public static final String DB_SCHEMA_NAME = "tax-service-database";
 }
