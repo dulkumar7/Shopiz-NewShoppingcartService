@@ -39,11 +39,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>io.pivotal.spring.cloud</groupId>
 			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
 			<version>1.5.0.RELEASE</version>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>mysql</groupId>

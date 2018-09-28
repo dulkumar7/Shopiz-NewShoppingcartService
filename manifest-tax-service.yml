@@ -7,9 +7,7 @@ applications:
   instances: 1
   services:
   - shopizer-database
-  - shopizer-service-registry
   env:
-    spring.application.name : shopizer-tax-service
     DATABASE_URL : mysql://b1f3f23d95094e:63fb4813@us-cdbr-iron-east-01.cleardb.net:3306/ad_67edd969496a40a?reconnect=true
     spring.datasource.username : user
     spring.datasource.password : test
