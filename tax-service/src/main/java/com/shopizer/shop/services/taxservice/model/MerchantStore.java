@@ -120,6 +120,7 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
     private boolean currencyFormatNational;
 
     public MerchantStore() {
+        super();
     }
 
     public boolean isUseCache() {

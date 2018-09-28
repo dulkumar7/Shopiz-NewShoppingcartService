@@ -10,6 +10,10 @@ public class TaxConfiguration implements JSONAware {
     private boolean collectTaxIfDifferentProvinceOfStoreCountry = true;
     private boolean collectTaxIfDifferentCountryOfStoreCountry = false;
 
+    public TaxConfiguration() {
+        super();
+    }
+
     @Override
     public String toJSONString() {
         JSONObject data = new JSONObject();

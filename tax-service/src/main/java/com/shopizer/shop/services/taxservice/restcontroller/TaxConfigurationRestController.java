@@ -22,36 +22,38 @@ public class TaxConfigurationRestController {
     @Autowired
     private TaxService taxService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @PostMapping("/edit")
-    public ResponseEntity<TaxConfiguration> getTaxConfiguration(@RequestBody Integer storeId) {
+    public TaxConfiguration getTaxConfiguration(@RequestBody Integer storeId) {
         TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(storeId);
         if(taxConfiguration == null) {
-            return new ResponseEntity<>(new TaxConfiguration(), HttpStatus.NO_CONTENT);
+            return new TaxConfiguration();
         }
-        return new ResponseEntity<>(taxConfiguration, HttpStatus.OK);
+        return taxConfiguration;
     }
 
     @PostMapping("/save")
-    public ResponseEntity saveTaxConfiguration(@RequestBody Map<String, String> reqBody) {
+    public String saveTaxConfiguration(@RequestBody Map<String, String> reqBody) {
 
         TaxConfiguration taxConfiguration = (TaxConfiguration) convertJsonToObject(reqBody.get("taxConfiguration").trim(), TaxConfiguration.class);
         MerchantStore merchantStore = (MerchantStore) convertJsonToObject(reqBody.get("merchantStore").trim(), MerchantStore.class);
 
         if(taxConfiguration != null && merchantStore != null) {
             MerchantConfiguration returnValue  = taxService.saveTaxConfiguration(taxConfiguration, merchantStore);
-            if(returnValue != null) {
-                return new ResponseEntity<>(HttpStatus.OK);
+            if(returnValue == null) {
+                return "FAILED";
             }
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return "SUCCESS";
     }
 
     private Object convertJsonToObject(String jsonInput, Class<?> classType) {
-        ObjectMapper mapper = new ObjectMapper();
         Object output = null;
         try {
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            output = mapper.readValue(jsonInput, classType);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            output = objectMapper.readValue(jsonInput, classType);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch(IOException ioe) {
@@ -59,16 +61,5 @@ public class TaxConfigurationRestController {
         }
         return output;
     }
-    
-    private String convertObjectToString(Object input) {
-        ObjectMapper mapper = new ObjectMapper();
-        String output = null;
-        try {
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            output = mapper.writeValueAsString(input);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return (output == null ? "": output);
-    }
+
 }

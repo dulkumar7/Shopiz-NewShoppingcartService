@@ -15,6 +15,10 @@ public class TaxConfiguration implements JSONAware {
 	private boolean collectTaxIfDifferentProvinceOfStoreCountry = true;
 	private boolean collectTaxIfDifferentCountryOfStoreCountry = false;
 
+	public TaxConfiguration(){
+		super();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public String toJSONString() {

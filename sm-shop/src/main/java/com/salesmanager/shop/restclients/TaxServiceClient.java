@@ -27,8 +27,8 @@ public class TaxServiceClient {
 
     public TaxConfiguration getTaxConfiguration(MerchantStore store) {
         final String url = taxServiceUrl + "/rest/admin/tax/taxconfiguration/edit";
-        ResponseEntity responseEntity = restTemplate.postForEntity(url, store.getId(), ResponseEntity.class);
-        return (TaxConfiguration) responseEntity.getBody();
+        TaxConfiguration responseEntity = restTemplate.postForObject(url, store.getId(), TaxConfiguration.class);
+        return responseEntity;
     }
 
     public void saveTaxConfiguration(TaxConfiguration taxConfiguration, MerchantStore merchantStore) {

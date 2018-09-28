@@ -22,7 +22,6 @@
 		<jjwt.version>0.8.0</jjwt.version>
 		<!-- Need to use the latest milestone in order to logon with latest FB app version -->
 		<spring-social-facebook.version>3.0.0.M3</spring-social-facebook.version>
-		<!--<spring-cloud.version>Brixton.RELEASE</spring-cloud.version>-->
 	</properties>
 
 	<dependencies>
@@ -55,12 +54,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-		<!--<dependency>
-			<groupId>io.pivotal.spring.cloud</groupId>
-			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
-			<version>1.2.0.RELEASE</version>
-		</dependency>-->
 
 
 		<dependency>
@@ -176,18 +169,6 @@
 
 	</dependencies>
 
-	<!--<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>-->
-
 	<build>
 		<plugins>
 			<plugin>
@@ -195,7 +176,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>shopizer-sm-shop-${shopizer.version}</finalName>
+		<finalName>shopizer-sm-shop-${version}</finalName>
 	</build>
 
 
