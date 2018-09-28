@@ -18,8 +18,8 @@
 
 	<!-- Properties to be used accross all components of the application -->
 	<util:properties id="shopizer-properties">
-    			<prop key="MULTIPLE_PRICE_AVAILABILITY">false</prop>
-    			<prop key="INDEX_PRODUCTS">true</prop>
+    			<prop key="MULTIPLE_PRICE_AVAILABILITY">true</prop>
+    			<prop key="INDEX_PRODUCTS">false</prop>
 				<!-- Images (aspect ratio) -->
 				<prop key="PRODUCT_IMAGE_WIDTH_SIZE">1000</prop>
 				<prop key="PRODUCT_IMAGE_HEIGHT_SIZE">800</prop>

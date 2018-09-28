@@ -143,7 +143,8 @@ public class ContentServiceImpl
     public Content getByCode(  String code,  MerchantStore store,  Language language )
         throws ServiceException
     {
-        return contentRepository.findByCode( code, store.getId(), language.getId() );
+        Content content = contentRepository.findByCode( code, store.getId(), language.getId() );
+        return (content != null ? content:new Content());
     }
 
     /**

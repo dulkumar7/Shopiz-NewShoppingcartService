@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import com.salesmanager.core.model.content.ContentDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -243,7 +244,6 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		
 		manufacturerService.create(defaultManufacturer);
 		
-		
 	}
 
 	private void createModules() throws ServiceException {
@@ -254,8 +254,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
             for (IntegrationModule entry : modules) {
         	    moduleConfigurationService.create(entry);
           }
-			
-			
+
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -266,19 +265,11 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 	private void createSubReferences() throws ServiceException {
 		
 		LOGGER.info(String.format("%s : Loading catalog sub references ", name));
-		
-
-		
 		ProductType productType = new ProductType();
 		productType.setCode(ProductType.GENERAL_TYPE);
 		productTypeService.create(productType);
 
-
-		
-		
 	}
-	
-
 	
 
 

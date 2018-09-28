@@ -7,6 +7,8 @@ applications:
   instances: 1
   services:
   - shopizer-database
+  timeout: 180
+  memory: 2G
   env:
     DATABASE_URL: mysql://b1f3f23d95094e:63fb4813@us-cdbr-iron-east-01.cleardb.net:3306/ad_67edd969496a40a?reconnect=true
     authToken.header: Authorization

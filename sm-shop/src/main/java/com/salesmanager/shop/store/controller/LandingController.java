@@ -104,14 +104,14 @@ public class LandingController {
 		if(content!=null) {
 			
 			ContentDescription description = content.getDescription();
-
-			model.addAttribute("page",description);
-			
 			PageInformation pageInformation = new PageInformation();
-			pageInformation.setPageTitle(description.getName());
-			pageInformation.setPageDescription(description.getMetatagDescription());
-			pageInformation.setPageKeywords(description.getMetatagKeywords());
-			
+			if(description != null) {
+				pageInformation.setPageTitle(description.getName());
+				pageInformation.setPageDescription(description.getMetatagDescription());
+				pageInformation.setPageKeywords(description.getMetatagKeywords());
+			}
+
+			model.addAttribute("page",description);			
 			request.setAttribute(Constants.REQUEST_PAGE_INFORMATION, pageInformation);
 			
 		}

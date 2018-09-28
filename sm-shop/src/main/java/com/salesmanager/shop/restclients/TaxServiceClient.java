@@ -37,7 +37,8 @@ public class TaxServiceClient {
         reqBody.put("taxConfiguration", convertObjectToString(taxConfiguration));
         //convert entity MerchantStore to a DTO object
         reqBody.put("merchantStore", convertObjectToString(merchantStore));
-        restTemplate.postForObject(url, reqBody, ResponseEntity.class);
+        String result = restTemplate.postForObject(url, reqBody, String.class);
+        System.out.println("Tax config save operation = " + result);
     }
 
     private String convertObjectToString(Object input) {
