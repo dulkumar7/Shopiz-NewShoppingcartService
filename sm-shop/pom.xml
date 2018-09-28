@@ -22,7 +22,7 @@
 		<jjwt.version>0.8.0</jjwt.version>
 		<!-- Need to use the latest milestone in order to logon with latest FB app version -->
 		<spring-social-facebook.version>3.0.0.M3</spring-social-facebook.version>
-		<spring-cloud.version>Brixton.RELEASE</spring-cloud.version>
+		<!--<spring-cloud.version>Brixton.RELEASE</spring-cloud.version>-->
 	</properties>
 
 	<dependencies>
@@ -56,11 +56,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>io.pivotal.spring.cloud</groupId>
 			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
 			<version>1.2.0.RELEASE</version>
-		</dependency>
+		</dependency>-->
 
 
 		<dependency>
@@ -176,7 +176,7 @@
 
 	</dependencies>
 
-	<dependencyManagement>
+	<!--<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -186,7 +186,7 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement>-->
 
 	<build>
 		<plugins>

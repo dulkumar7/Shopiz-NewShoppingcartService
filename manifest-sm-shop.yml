@@ -7,7 +7,6 @@ applications:
   instances: 1
   services:
   - shopizer-database
-  - shopizer-service-registry
   env:
     DATABASE_URL: mysql://b1f3f23d95094e:63fb4813@us-cdbr-iron-east-01.cleardb.net:3306/ad_67edd969496a40a?reconnect=true
     authToken.header: Authorization
@@ -19,7 +18,6 @@ applications:
     db.maxPoolSize: 8
     db.minPoolSize: 2
     db.username: user
-    db.user: user
     db.password: test
     db.preferredTestQuery: SELECT 1
     db.schema: ad_67edd969496a40a
@@ -33,7 +31,7 @@ applications:
     facebook.app.id: 138715906193252
     facebook.app.secret: e9efad42873b8aa578af19f8322302ad
     hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate.hbm2ddl.auto: create
+    hibernate.hbm2ddl.auto: create-drop
     jwt.expiration: 604800
     jwt.header: Authorization
     jwt.secret: aSecret
@@ -47,4 +45,4 @@ applications:
     password: test
     secretKey: 7070200000000007
     shippingDistancePreProcessor.apiKey: 12345678
-    spring.jpa.hibernate.ddl-auto: create
+    spring.jpa.hibernate.ddl-auto: create-drop
