@@ -105,6 +105,7 @@ public class LandingController {
 			
 			ContentDescription description = content.getDescription();
 			PageInformation pageInformation = new PageInformation();
+			
 			if(description != null) {
 				pageInformation.setPageTitle(description.getName());
 				pageInformation.setPageDescription(description.getMetatagDescription());
