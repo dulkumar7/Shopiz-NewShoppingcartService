@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.tax.TaxConfiguration;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,14 @@ import java.util.Map;
 @Service
 public class TaxServiceClient {
 
-    private String taxServiceUrl = "http://localhost:8301";
+    //private String taxServiceUrl = "http://localhost:8301";
+    private String taxServiceUrl = "https://shopizer-tax-service-hb.cfapps.io";
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ObjectMapper objectMapper;
 
     public TaxConfiguration getTaxConfiguration(MerchantStore store) {
         final String url = taxServiceUrl + "/rest/admin/tax/taxconfiguration/edit";
@@ -41,15 +41,13 @@ public class TaxServiceClient {
     }
 
     private String convertObjectToString(Object input) {
-        ObjectMapper mapper = new ObjectMapper();
         String output = null;
         try {
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            output = mapper.writeValueAsString(input);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            output = objectMapper.writeValueAsString(input);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return (output == null ? "": output);
     }
-
 }

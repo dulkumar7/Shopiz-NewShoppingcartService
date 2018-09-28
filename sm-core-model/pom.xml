@@ -101,9 +101,6 @@
 		    <groupId>org.springframework.social</groupId>
 		    <artifactId>spring-social-core</artifactId>
 		</dependency>
-		
-
-        
         
 	</dependencies>
 </project>

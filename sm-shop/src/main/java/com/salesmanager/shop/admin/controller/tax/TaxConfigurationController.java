@@ -41,8 +41,8 @@ public class TaxConfigurationController {
 		setMenu(model, request);
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
-		TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(store);
-		//TaxConfiguration taxConfiguration = taxServiceClient.getTaxConfiguration(store);
+		//TaxConfiguration taxConfiguration = taxService.getTaxConfiguration(store); //previous code
+		TaxConfiguration taxConfiguration = taxServiceClient.getTaxConfiguration(store); //current microservice
 		if(taxConfiguration == null) {
 			
 			taxConfiguration = new TaxConfiguration();
@@ -63,8 +63,8 @@ public class TaxConfigurationController {
 		setMenu(model, request);
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
-		//taxService.saveTaxConfiguration(taxConfiguration, store);
-		taxServiceClient.saveTaxConfiguration(taxConfiguration, store);
+		//taxService.saveTaxConfiguration(taxConfiguration, store); //previous code
+		taxServiceClient.saveTaxConfiguration(taxConfiguration, store); //current microservice
 		
 		model.addAttribute("success","success");
 		

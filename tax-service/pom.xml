@@ -5,7 +5,7 @@
 
 	<groupId>com.shopizer.shop.services</groupId>
 	<artifactId>tax-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.01-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>tax-service</name>
@@ -24,23 +24,11 @@
 		<java.version>1.8</java.version>
 		<simple-json-version>1.1.1</simple-json-version>
 		<swagger2-version>2.6.1</swagger2-version>
+		<flyway-version>3.0</flyway-version>
 		<spring-cloud.version>Edgware.SR4</spring-cloud.version>
-		<!--<shopizer-version>2.2.0-SNAPSHOT</shopizer-version>-->
 	</properties>
 
 	<dependencies>
-
-		<!--<dependency>
-			<groupId>com.shopizer</groupId>
-			<artifactId>sm-core-model</artifactId>
-			<version>${shopizer-version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.shopizer</groupId>
-			<artifactId>sm-core</artifactId>
-			<version>${shopizer-version}</version>
-		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,10 +39,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- <dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka</artifactId>
-		</dependency> -->
+		<dependency>
+			<groupId>io.pivotal.spring.cloud</groupId>
+			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
+			<version>1.5.0.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -86,15 +75,8 @@
 			<version>${swagger2-version}</version>
 			<scope>compile</scope>
 		</dependency>
-		<!--<dependency>
-            <groupId>com.shopizer</groupId>
-            <artifactId>sm-core-model</artifactId>
-            <version>2.2.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>-->
 
-
-    </dependencies>
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>

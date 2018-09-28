@@ -26,8 +26,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.json.simple.JSONAware;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.constants.SchemaConstant;
@@ -36,6 +34,8 @@ import com.salesmanager.core.model.common.audit.AuditSection;
 import com.salesmanager.core.model.common.audit.Auditable;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.order.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Entity
