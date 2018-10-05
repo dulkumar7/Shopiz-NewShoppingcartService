@@ -8,11 +8,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-//import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -136,6 +135,7 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 
     }
 
+    @LoadBalanced
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -145,6 +145,7 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(DeserializationFeature.EAGER_DESERIALIZER_FETCH, true);
         return mapper;
     }
 

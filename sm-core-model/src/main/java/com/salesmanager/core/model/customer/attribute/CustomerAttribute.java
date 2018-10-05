@@ -99,6 +99,4 @@ public class CustomerAttribute extends SalesManagerEntity<Long, CustomerAttribut
 	public String getTextValue() {
 		return textValue;
 	}
-
-
 }

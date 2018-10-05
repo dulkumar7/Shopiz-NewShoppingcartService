@@ -1,5 +1,6 @@
 package com.shopizer.shop.services.taxservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shopizer.shop.services.taxservice.constants.TaxServiceConstants;
 import org.hibernate.annotations.Proxy;
 
@@ -23,9 +24,11 @@ public class Country extends SalesManagerEntity<Integer, Country> {
     private Integer id;
 
     @OneToMany( mappedBy = "country", cascade = CascadeType.ALL)
+    @JsonBackReference(value = "descriptions")
     private List<CountryDescription> descriptions = new ArrayList<CountryDescription>();
 
     @OneToMany( mappedBy = "country")
+    @JsonBackReference(value = "zones")
     private List<Zone> zones = new ArrayList<Zone>();
 
     @ManyToOne(targetEntity = GeoZone.class)

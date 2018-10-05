@@ -20,6 +20,7 @@ public class Zone extends SalesManagerEntity<Long, Zone>{
     private Long id;
 
     @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL)
+    @JsonBackReference(value = "descriptions")
     private List<ZoneDescription> descriptions = new ArrayList<ZoneDescription>();
 
     @ManyToOne

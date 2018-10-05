@@ -5,7 +5,7 @@
 
 	<groupId>com.shopizer.shop.services</groupId>
 	<artifactId>tax-service</artifactId>
-	<version>1.01-SNAPSHOT</version>
+	<version>1.00-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>tax-service</name>
@@ -25,7 +25,7 @@
 		<simple-json-version>1.1.1</simple-json-version>
 		<swagger2-version>2.6.1</swagger2-version>
 		<flyway-version>3.0</flyway-version>
-		<spring-cloud.version>Edgware.SR4</spring-cloud.version>
+		<spring-cloud-version>Edgware.SR4</spring-cloud-version>
 	</properties>
 
 	<dependencies>
@@ -40,14 +40,30 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>io.pivotal.spring.cloud</groupId>
+			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -56,7 +72,7 @@
 			<version>${simple-json-version}</version>
 			<scope>compile</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -75,9 +91,16 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>io.pivotal.spring.cloud</groupId>
+				<artifactId>spring-cloud-services-dependencies</artifactId>
+				<version>1.4.1.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
+				<version>${spring-cloud-version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

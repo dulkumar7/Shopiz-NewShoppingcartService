@@ -37,6 +37,9 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.salesmanager.core.constants.SchemaConstant;
@@ -86,20 +89,24 @@ public class TaxRate  extends SalesManagerEntity<Long, TaxRate> implements Audit
 	
 	@ManyToOne
 	@JoinColumn(name = "TAX_CLASS_ID" , nullable=false)
+	@JsonBackReference(value = "taxClass")
 	private TaxClass taxClass;
 	
 
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="MERCHANT_ID", nullable=false)
+	@JsonBackReference(value = "merchantStore")
 	private MerchantStore merchantStore;
 	
 	@Valid
 	@OneToMany(mappedBy = "taxRate", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonBackReference(value = "descriptions")
 	private List<TaxRateDescription> descriptions = new ArrayList<TaxRateDescription>();
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
 	@JoinColumn(name="COUNTRY_ID", nullable=false, updatable=true)
+	@JsonBackReference(value = "country")
 	private Country country;
 
 	@OneToOne(fetch = FetchType.LAZY)
@@ -111,15 +118,17 @@ public class TaxRate  extends SalesManagerEntity<Long, TaxRate> implements Audit
 	
 	@ManyToOne
 	@JoinColumn(name = "PARENT_ID")
+	@JsonBackReference(value = "parent")
 	private TaxRate parent;
-	
+
 	@OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@JsonBackReference(value = "taxRates")
 	private List<TaxRate> taxRates = new ArrayList<TaxRate>();
-	
+
 	@Transient
 	private String rateText;
-	
-	
+
+
 	public String getRateText() {
 		return rateText;
 	}
@@ -138,12 +147,12 @@ public class TaxRate  extends SalesManagerEntity<Long, TaxRate> implements Audit
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public AuditSection getAuditSection() {
 		return auditSection;
 	}
-	
+
 	@Override
 	public void setAuditSection(AuditSection auditSection) {
 		this.auditSection = auditSection;
@@ -181,8 +190,6 @@ public class TaxRate  extends SalesManagerEntity<Long, TaxRate> implements Audit
 		this.taxClass = taxClass;
 	}
 
-
-
 	public List<TaxRateDescription> getDescriptions() {
 		return descriptions;
 	}
@@ -190,8 +197,6 @@ public class TaxRate  extends SalesManagerEntity<Long, TaxRate> implements Audit
 	public void setDescriptions(List<TaxRateDescription> descriptions) {
 		this.descriptions = descriptions;
 	}
-
-
 
 	public MerchantStore getMerchantStore() {
 		return merchantStore;
@@ -216,7 +221,6 @@ public class TaxRate  extends SalesManagerEntity<Long, TaxRate> implements Audit
 	public Zone getZone() {
 		return zone;
 	}
-
 
 	public void setTaxRates(List<TaxRate> taxRates) {
 		this.taxRates = taxRates;

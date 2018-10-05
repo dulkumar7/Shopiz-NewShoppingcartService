@@ -12,10 +12,6 @@ import com.salesmanager.core.model.reference.language.Language;
 import com.salesmanager.core.model.tax.taxclass.TaxClass;
 
 public interface ProductRepositoryCustom {
-	
-	
-	
-	
 
 		ProductList listByStore(MerchantStore store, Language language,
 			ProductCriteria criteria);

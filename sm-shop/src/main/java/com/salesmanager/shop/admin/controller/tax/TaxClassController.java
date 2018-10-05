@@ -1,17 +1,18 @@
 package com.salesmanager.shop.admin.controller.tax;
 
-import com.salesmanager.core.business.services.catalog.product.ProductService;
-import com.salesmanager.core.business.services.tax.TaxClassService;
-import com.salesmanager.core.business.utils.ajax.AjaxPageableResponse;
-import com.salesmanager.core.business.utils.ajax.AjaxResponse;
-import com.salesmanager.core.model.catalog.product.Product;
-import com.salesmanager.core.model.merchant.MerchantStore;
-import com.salesmanager.core.model.tax.taxclass.TaxClass;
-import com.salesmanager.shop.admin.model.web.Menu;
-import com.salesmanager.shop.constants.Constants;
-import com.salesmanager.shop.utils.LabelUtils;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,14 +27,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import com.salesmanager.core.business.services.catalog.product.ProductService;
+import com.salesmanager.core.business.services.tax.TaxClassService;
+import com.salesmanager.core.business.utils.ajax.AjaxResponse;
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.merchant.MerchantStore;
+import com.salesmanager.core.model.tax.taxclass.TaxClass;
+import com.salesmanager.shop.admin.model.web.Menu;
+import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.restclients.TaxServiceClient;
+import com.salesmanager.shop.utils.LabelUtils;
 
 @Controller
 public class TaxClassController {
@@ -46,6 +49,9 @@ public class TaxClassController {
 	
 	@Inject
 	LabelUtils messages;
+
+	@Autowired
+	private TaxServiceClient taxServiceClient;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(TaxClassController.class);
 
@@ -63,18 +69,20 @@ public class TaxClassController {
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClasses;
 	}
-	
 
-	//TODO: candidate for extraction to tax-service
+	//TODO: candidate for extraction to tax-service -- DONE
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value = "/admin/tax/taxclass/paging.html", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseEntity<String> pageTaxClasses(HttpServletRequest request,
-			HttpServletResponse response, Locale locale) {
+	ResponseEntity<String> pageTaxClasses(HttpServletRequest request,	HttpServletResponse response, Locale locale) {
 		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
+		String responseValue = taxServiceClient.getTaxClassPartialList(store);
+		final HttpHeaders httpHeaders= new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		return new ResponseEntity<String>(responseValue, httpHeaders, HttpStatus.OK);
 
-		AjaxResponse resp = new AjaxResponse();
+		/*AjaxResponse resp = new AjaxResponse();
 		try {
 
 				List<TaxClass> taxClasses = taxClassService.listByStore(store);
@@ -99,88 +107,70 @@ public class TaxClassController {
 		String returnString = resp.toJSONString();
 		final HttpHeaders httpHeaders= new HttpHeaders();
 	    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
+		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);*/
 	}
 
-	//TODO: candidate for extraction to tax-service
+	//TODO: candidate for extraction to tax-service -- DONE
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/save.html", method=RequestMethod.POST)
 	public String saveTaxClass(@Valid @ModelAttribute("taxClass") TaxClass taxClass, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
-		
-		
-		setMenu(model, request);
-		
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 
-		
+		setMenu(model, request);
+		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		//requires code and name
 		if(taxClass.getCode().equals(TaxClass.DEFAULT_TAX_CLASS)) {
 			ObjectError error = new ObjectError("code",messages.getMessage("message.taxclass.alreadyexist", locale));
 			result.addError(error);
 		}
-		
-
-		
 		//check if the code already exist
-		TaxClass taxClassDb = taxClassService.getByCode(taxClass.getCode(),store);
-		
+		//TaxClass taxClassDb = taxClassService.getByCode(taxClass.getCode(),store);
+		TaxClass taxClassDb = taxServiceClient.getTaxClassByStoreAndCode(store.getId(), taxClass.getCode());
 		if(taxClassDb!=null) {
 			ObjectError error = new ObjectError("code",messages.getMessage("message.taxclass.alreadyexist", locale));
 			result.addError(error);
 		}
-		
 		if (result.hasErrors()) {
 			return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClasses;
 		}
-		
-		taxClassService.create(taxClass);
-		
+		//taxClassService.create(taxClass);
+		taxServiceClient.createTaxClass(taxClass, store);
 		model.addAttribute("success","success");
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClasses;
 		
 	}
 
-	//TODO: candidate for extraction to tax-service
+	//TODO: candidate for extraction to tax-service --PENDING
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/update.html", method=RequestMethod.POST)
 	public String updateTaxClass(@Valid @ModelAttribute("taxClass") TaxClass taxClass, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
 		
-		
 		setMenu(model, request);
-		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-
-		
 		//requires code and name
 		if(taxClass.getCode().equals(TaxClass.DEFAULT_TAX_CLASS)) {
 			ObjectError error = new ObjectError("code",messages.getMessage("message.taxclass.alreadyexist", locale));
 			result.addError(error);
 		}
-		
-
-		
 		//check if the code already exist
 		TaxClass taxClassDb = taxClassService.getByCode(taxClass.getCode(),store);
-		
+		//TaxClass taxClassDb = taxServiceClient.getTaxClassByStoreAndCode(store.getId(), taxClass.getCode());
 		if(taxClassDb!=null && taxClassDb.getId().longValue()!=taxClass.getId().longValue()) {
 			ObjectError error = new ObjectError("code",messages.getMessage("message.taxclass.alreadyexist", locale));
 			result.addError(error);
 		}
-		
 		if (result.hasErrors()) {
 			return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClass;
 		}
-		
 		taxClassService.update(taxClass);
-		
+		//taxServiceClient.updateTaxClass(taxClass, store);
 		model.addAttribute("success","success");
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClass;
 		
 	}
 
-	//TODO: candidate for extraction to tax-service
+	//TODO: candidate for extraction to tax-service --DOING
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxclass/remove.html", method=RequestMethod.POST)
 	public @ResponseBody ResponseEntity<String> removeTaxClass(HttpServletRequest request, Locale locale) throws Exception {
@@ -194,14 +184,10 @@ public class TaxClassController {
 	    httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
 		try {
-			
-
 			/**
-			 * In order to remove a User the logged in ser must be STORE_ADMIN
+			 * In order to remove a User the logged in user must be STORE_ADMIN
 			 * or SUPER_USER
 			 */
-			
-
 			if(taxClassId==null){
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);			
@@ -220,8 +206,8 @@ public class TaxClassController {
 				return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 			}
 			
-			TaxClass taxClass = taxClassService.getById(lTaxClassId);
-			
+			//TaxClass taxClass = taxClassService.getById(lTaxClassId);
+			TaxClass taxClass = taxServiceClient.getTaxClassById(lTaxClassId);
 			if(taxClass==null) {
 				LOGGER.error("Invalid taxClassId " + taxClassId);
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
@@ -231,7 +217,8 @@ public class TaxClassController {
 			}
 			
 			//look if the taxclass is used for products
-			List<Product> products = productService.listByTaxClass(taxClass);
+			//List<Product> products = productService.listByTaxClass(taxClass);
+			List<Product> products = taxServiceClient.listProductsByTaxClass(taxClass);
 
 			if(products!=null && products.size()>0) {
 				resp.setStatusMessage(messages.getMessage("message.product.association", locale));
@@ -239,13 +226,10 @@ public class TaxClassController {
 				String returnString = resp.toJSONString();
 				return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 			}
-			
-			
-			taxClassService.delete(taxClass);
+			//taxClassService.delete(taxClass);
+			taxServiceClient.deleteTaxClass(taxClass);
 			
 			resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
-
-		
 		
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting tax class", e);
@@ -276,19 +260,13 @@ public class TaxClassController {
 			return "redirect:/admin/tax/taxclass/list.html";
 		}
 		
-		if(taxClass==null || taxClass.getMerchantStore().getId()!=store.getId()) {
+		/*if(taxClass==null || taxClass.getMerchantStore().getId()!=store.getId()) {
 			return "redirect:/admin/tax/taxclass/list.html";
-		}
-		
-		
-		
-		
+		}*/
+
 		model.addAttribute("taxClass", taxClass);
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxClass;
-		
-		
-		
 	}
 
 

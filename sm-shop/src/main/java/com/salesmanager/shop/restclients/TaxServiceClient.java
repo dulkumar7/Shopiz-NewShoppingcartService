@@ -1,23 +1,33 @@
 package com.salesmanager.shop.restclients;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.salesmanager.core.model.catalog.product.Product;
+import com.salesmanager.core.model.tax.taxrate.TaxRate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salesmanager.core.model.merchant.MerchantStore;
 import com.salesmanager.core.model.tax.TaxConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.salesmanager.core.model.tax.taxclass.TaxClass;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class TaxServiceClient {
 
+    private static Logger logger = LoggerFactory.getLogger(TaxServiceClient.class);
     //private String taxServiceUrl = "http://localhost:8301";
-    private String taxServiceUrl = "https://shopizer-tax-service-hb.cfapps.io";
+    //private String taxServiceUrl = "//shopizer-tax-service";
+    //private String taxServiceUrl = "https://shopizer-tax-service-hb.cfapps.io";
+    //private String taxServiceUrl = "https://shopizer-tax-service-no-eureka-nttd.cfapps.io";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -25,30 +35,177 @@ public class TaxServiceClient {
     @Autowired
     private ObjectMapper objectMapper;
 
+    public URI getTaxServiceUrl(String endpoint) {
+        return UriComponentsBuilder.fromUriString("//shopizer-tax-service" + endpoint).build().toUri();
+    }
+
     public TaxConfiguration getTaxConfiguration(MerchantStore store) {
-        final String url = taxServiceUrl + "/rest/admin/tax/taxconfiguration/edit";
-        TaxConfiguration responseEntity = restTemplate.postForObject(url, store.getId(), TaxConfiguration.class);
-        return responseEntity;
+    	logger.info("START: TaxServiceClient.getTaxConfiguration()");
+    	final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-configuration/edit");
+        logger.info("service-endpoint: ", uri);
+        TaxConfiguration response = restTemplate.postForObject(uri, store.getId(), TaxConfiguration.class);
+        logger.info("END: TaxServiceClient.getTaxConfiguration() -- return value = ", response);
+        return response;
     }
 
     public void saveTaxConfiguration(TaxConfiguration taxConfiguration, MerchantStore merchantStore) {
-        final String url = taxServiceUrl + "/rest/admin/tax/taxconfiguration/save";
+    	logger.info("START: TaxServiceClient.createTaxConfiguration()");
         Map<String, Object> reqBody = new HashMap<>();
-        reqBody.put("taxConfiguration", convertObjectToString(taxConfiguration));
-        //convert entity MerchantStore to a DTO object
-        reqBody.put("merchantStore", convertObjectToString(merchantStore));
-        String result = restTemplate.postForObject(url, reqBody, String.class);
-        System.out.println("Tax config save operation = " + result);
+        try {
+            reqBody.put("taxConfiguration", objectMapper.writeValueAsString(taxConfiguration));
+            reqBody.put("merchantStore", objectMapper.writeValueAsString(merchantStore));
+        } catch(IOException ioe) {
+            logger.error("Exception while parsing ", ioe);
+        }
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-configuration/save");
+        logger.info("service-endpoint: ", uri);
+        String result = restTemplate.postForObject(uri, reqBody, String.class);
+        logger.info("END: TaxServiceClient.saveTaxConfiguration() -- return value = ",result);
     }
 
-    private String convertObjectToString(Object input) {
-        String output = null;
-        try {
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            output = objectMapper.writeValueAsString(input);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return (output == null ? "": output);
+    public String getTaxClassPartialList(MerchantStore store) {
+        logger.info("START: TaxServiceClient.getTaxClassPartialList()");
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/list-partial/" + store.getId());
+        logger.info("service-endpoint: ", uri);
+        String returnValue = restTemplate.getForObject(uri, String.class);
+        logger.info("END: TaxServiceClient.getTaxClassPartialList() -- return value = ", returnValue);
+        return returnValue;
     }
+
+    public List<TaxClass> getTaxClassFullList(MerchantStore store) {
+        logger.info("START: TaxServiceClient.getTaxClassFullList()");
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/list-full/" + store.getId());
+        logger.info("service-endpoint: ", uri);
+        String returnValue = restTemplate.getForObject(uri, String.class);
+        List<TaxClass> taxClassList = new ArrayList<>();
+        try {
+        	List<Object> taxClassJsonList = (List<Object>) objectMapper.readValue(returnValue, List.class);
+        	//convert json strings to taxclass objects
+        	taxClassJsonList.forEach(data -> {
+                try {
+                    String jsonStr = objectMapper.writeValueAsString(data);
+                    taxClassList.add(objectMapper.readValue(jsonStr, TaxClass.class));
+                } catch (IOException e) {
+                    logger.error("Error while parsiing TaxClass ", e);
+                }
+
+            });
+        } catch (IOException ioe) {
+            logger.error("Exception while parsing list of TaxClass", ioe);
+        }
+        logger.info("END: TaxServiceClient.getTaxClassFullList() -- return value = ", returnValue);
+        return taxClassList;
+    }
+
+    public TaxClass getTaxClassByStoreAndCode(Integer storeId, String taxCode) {
+        logger.info("START: TaxServiceClient.getTaxClassByStoreAndCode()");
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/storeId/" + storeId + "/tax-code/" + taxCode);
+        logger.info("service-endpoint: ", uri);
+        TaxClass response = restTemplate.getForObject(uri, TaxClass.class);
+        logger.info("END: TaxServiceClient.getTaxClassByStoreAndCode() -- return value = ", response);
+        return response;
+    }
+
+    public TaxClass createTaxClass(TaxClass taxClass, MerchantStore store) {
+        logger.info("START: TaxServiceClient.createTaxClass()");
+        Map<String, String> reqBody = new HashMap<>();
+        try {
+            reqBody.put("taxClass", objectMapper.writeValueAsString(taxClass));
+            reqBody.put("merchantStore", objectMapper.writeValueAsString(store));
+        }catch(IOException ioe) {
+            logger.error("Exception while parsing ", ioe);
+        }
+        logger.info("Request body: ", reqBody);
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/create");
+        logger.info("service-endpoint: ", uri);
+        TaxClass response = restTemplate.postForObject(uri, reqBody, TaxClass.class);
+        logger.info("END: TaxServiceClient.createTaxClass() -- return value = ", response);
+        return response;
+    }
+
+    public void updateTaxClass(TaxClass taxClass, MerchantStore store) {
+        logger.info("START: TaxServiceClient.updateTaxClass()");
+        Map<String, String> reqBody = new HashMap<>();
+        try{
+            reqBody.put("taxClass", objectMapper.writeValueAsString(taxClass));
+            reqBody.put("merchantStore", objectMapper.writeValueAsString(store));
+        } catch(IOException ioe) {
+            logger.error("Exception while parsion ", ioe);
+        }
+        logger.info("Request body: ", reqBody);
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/update");
+        logger.info("service-endpoint: ", uri);
+        restTemplate.put(uri, reqBody);
+        logger.info("END: TaxServiceClient.updateTaxClass()");
+    }
+
+    public TaxClass getTaxClassById(long taxClassId) {
+        logger.info("START: TaxServiceClient.getTaxClassById()");
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/id/" + taxClassId);
+        logger.info("service-endpoint: ", uri);
+        String response = restTemplate.getForObject(uri, String.class);
+        TaxClass taxClass = null;
+        try {
+            taxClass = objectMapper.readValue(response, TaxClass.class);
+        } catch (IOException e) {
+            logger.error("Error while parsin taxClass ", e);
+        }
+        logger.info("END: TaxServiceClient.getTaxClassById()", taxClass);
+        return taxClass;
+    }
+
+    public List<Product> listProductsByTaxClass(TaxClass taxClass) {
+        logger.info("START: TaxServiceClient.listProductsByTaxClass()");
+        final URI uri =  getTaxServiceUrl("/rest/admin/tax/tax-class/products/id/" + taxClass.getId()) ;
+        logger.info("service-endpoint: ", uri);
+        List<Product> products = restTemplate.getForObject(uri, List.class);
+        logger.info("END: TaxServiceClient.listProductsByTaxClass()", products);
+        return products;
+    }
+
+    public void deleteTaxClass(TaxClass taxClass) {
+        logger.info("START: TaxServiceClient.deleteTaxClass()");
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/delete/" + taxClass.getId());
+        logger.info("service-endpoint: ", uri);
+        restTemplate.delete(uri);
+        logger.info("END: TaxServiceClient.deleteTaxClass()");
+    }
+
+    public List<TaxRate> listTaxRatesByStore(MerchantStore store) {
+        logger.info("START: TaxServiceClient.listTaxRatesByStore() -- input = ", store);
+        List<TaxRate> result = new ArrayList<>();
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-rates/list-by-store/" + store.getId());
+        logger.info("service-endpoint: ", uri);
+        String taxRatesListStr = restTemplate.getForObject(uri, String.class);
+        try {
+            result = (List<TaxRate>)objectMapper.readValue(taxRatesListStr, List.class);
+        } catch (IOException ioe) {
+            logger.error("Parsing exception ", ioe);
+        }
+        logger.info("END: TaxServiceClient.listTaxRatesByStore() -- output = ", result);
+        return result;
+    }
+
+    public TaxRate createTaxRate(TaxRate taxRate, MerchantStore store) {
+        logger.info("START: TaxServiceClient.createTaxRate() -- input = ", taxRate);
+        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-rates/create");
+        Map<String, String> reqBody = new HashMap<>();
+        try {
+            reqBody.put("taxRate", objectMapper.writeValueAsString(taxRate));
+            reqBody.put("merchantStore", objectMapper.writeValueAsString(store));
+            reqBody.put("country", objectMapper.writeValueAsString(taxRate.getCountry()));
+            reqBody.put("taxRateDescriptions", objectMapper.writeValueAsString(taxRate.getDescriptions()));
+            reqBody.put("zone", objectMapper.writeValueAsString(taxRate.getZone()));
+            reqBody.put("parent", objectMapper.writeValueAsString(taxRate.getParent()));
+            reqBody.put("taxClass", objectMapper.writeValueAsString(taxRate.getTaxClass()));
+        } catch(IOException ioe) {
+            logger.error("Exception while parsing ", ioe);
+        }
+        logger.info("createTaxRate Request body: ", reqBody);
+        logger.info("service-endpoint: ", uri);
+        TaxRate response = restTemplate.postForObject(uri, reqBody, TaxRate.class);
+        logger.info("END: TaxServiceClient.createTaxRate() -- return value = ", response);
+        return response;
+    }
+
 }

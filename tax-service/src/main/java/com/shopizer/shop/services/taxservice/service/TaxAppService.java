@@ -2,25 +2,33 @@ package com.shopizer.shop.services.taxservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.shopizer.shop.services.taxservice.model.MerchantConfiguration;
-import com.shopizer.shop.services.taxservice.model.MerchantStore;
-import com.shopizer.shop.services.taxservice.model.TaxConfiguration;
-import com.shopizer.shop.services.taxservice.repository.TaxConfigurationRepository;
+import com.shopizer.shop.services.taxservice.model.*;
+import com.shopizer.shop.services.taxservice.repository.TaxAppClassRepository;
+import com.shopizer.shop.services.taxservice.repository.TaxAppConfigurationRepository;
+import com.shopizer.shop.services.taxservice.repository.TaxAppRatesRepository;
 import com.shopizer.shop.services.taxservice.repository.TaxMerchantConfigRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class TaxService {
+public class TaxAppService {
 
     private final static String TAX_CONFIGURATION = "TAX_CONFIG";
 
     @Autowired
-    private TaxConfigurationRepository taxConfigurationRepository;
+    private TaxAppConfigurationRepository taxConfigurationRepository;
 
     @Autowired
     private TaxMerchantConfigRepository taxMerchantConfigRepository;
+
+    @Autowired
+    private TaxAppClassRepository taxAppClassRepository;
+
+    @Autowired
+    private TaxAppRatesRepository taxAppRatesRepository;
 
     public TaxConfiguration getTaxConfiguration(Integer storeId) throws ServiceException {
         MerchantConfiguration merchantConfiguration = null;
@@ -53,10 +61,41 @@ public class TaxService {
 
         String value = shippingConfiguration.toJSONString();
         merchantConfiguration.setValue(value); //maped
-        
+
         MerchantConfiguration createdConfig = taxMerchantConfigRepository.saveAndFlush(merchantConfiguration);
         return createdConfig;
 
     }
 
+    public List<TaxClass> listTaxClassByStore(Integer storeId) throws ServiceException {
+        return taxAppClassRepository.findByStore(storeId);
+    }
+
+    public List<TaxRate> listTaxRatesByStore(Integer storeId) {
+        return taxAppRatesRepository.findByStoreId(storeId);
+    }
+
+    public TaxClass getTaxClassByStoreAndTaxCode(Integer storeId, String taxCode) throws ServiceException {
+        return taxAppClassRepository.findByStoreAndCode(storeId, taxCode);
+    }
+
+    public TaxClass createAndUpdateTaxClass(TaxClass taxClass) {
+        return (TaxClass) taxAppClassRepository.saveAndFlush(taxClass);
+    }
+
+    public TaxClass getTaxClassById(Long taxClassId) {
+        return taxAppClassRepository.getById(taxClassId);
+    }
+
+    public List<Product> listProductsByTaxClass(Long taxClassId) {
+        return taxAppClassRepository.listProductsOfTaxClass(taxClassId);
+    }
+
+    public void deleteTaxClass(Long taxClassId) {
+        taxAppClassRepository.delete(taxClassId);
+    }
+
+    public TaxRate createAndUpdateTaxRate(TaxRate taxRateIn) {
+        return (TaxRate) taxAppRatesRepository.save(taxRateIn);
+    }
 }

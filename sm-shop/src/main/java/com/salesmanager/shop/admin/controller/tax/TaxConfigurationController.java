@@ -26,8 +26,8 @@ import java.util.Map;
 @Controller
 public class TaxConfigurationController {
 	
-	@Inject
-	private TaxService taxService = null;
+	/*@Inject
+	private TaxService taxService = null;*/
 
 	@Autowired
 	private TaxServiceClient taxServiceClient;

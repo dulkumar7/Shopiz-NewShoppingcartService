@@ -14,12 +14,9 @@
  */
 package com.salesmanager.core.model.tax.taxrate;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.salesmanager.core.constants.SchemaConstant;
 import com.salesmanager.core.model.common.description.Description;
 
@@ -35,8 +32,9 @@ import com.salesmanager.core.model.common.description.Description;
 public class TaxRateDescription extends Description {
 	private static final long serialVersionUID = -4752794805878361822L;
 
-	@ManyToOne(targetEntity = TaxRate.class)
+	@ManyToOne(targetEntity = TaxRate.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "TAX_RATE_ID")
+	@JsonBackReference("taxRate")
 	private TaxRate taxRate;
 	
 	public TaxRateDescription() {

@@ -13,10 +13,12 @@ import com.salesmanager.core.model.tax.taxrate.TaxRate;
 import com.salesmanager.core.model.tax.taxrate.TaxRateDescription;
 import com.salesmanager.shop.admin.model.web.Menu;
 import com.salesmanager.shop.constants.Constants;
+import com.salesmanager.shop.restclients.TaxServiceClient;
 import com.salesmanager.shop.utils.LabelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,7 +69,10 @@ public class TaxRatesController {
 	@Inject
 	private ZoneService zoneService;
 
-	//TODO: candidate for extraction to tax-service
+	@Autowired
+	private TaxServiceClient taxServiceClient;
+
+	//TODO: candidate for extraction to tax-service -- DONE
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value={"/admin/tax/taxrates/list.html"}, method=RequestMethod.GET)
 	public String displayTaxRates(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -92,8 +97,10 @@ public class TaxRatesController {
 		taxRate.setCountry(store.getCountry());
 		
 		
-		List<TaxRate> taxRates = taxRateService.listByStore(store);
-		List<TaxClass> taxClasses = taxClassService.listByStore(store);
+		//List<TaxRate> taxRates = taxRateService.listByStore(store);
+		List<TaxRate> taxRates = taxServiceClient.listTaxRatesByStore(store);
+		//List<TaxClass> taxClasses = taxClassService.listByStore(store);
+		List<TaxClass> taxClasses = taxServiceClient.getTaxClassFullList(store);
 		
 		model.addAttribute("taxRate", taxRate);
 		model.addAttribute("countries", countries);
@@ -108,24 +115,15 @@ public class TaxRatesController {
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value = "/admin/tax/taxrates/page.html", method = RequestMethod.POST)
 	public @ResponseBody
-	ResponseEntity<String> pageTaxRates(HttpServletRequest request,
-			HttpServletResponse response) {
+	ResponseEntity<String> pageTaxRates(HttpServletRequest request, HttpServletResponse response) {
 
 		AjaxResponse resp = new AjaxResponse();
-
-
 		try {
-			
 			NumberFormat nf = null;
-
-			
 			nf = NumberFormat.getInstance(Locale.US);
-			nf.setMaximumFractionDigits(Integer.parseInt(Character
-						.toString(DECIMALCOUNT)));
-			nf.setMinimumFractionDigits(Integer.parseInt(Character
-						.toString(DECIMALCOUNT)));
-			
-			
+			nf.setMaximumFractionDigits(Integer.parseInt(Character.toString(DECIMALCOUNT)));
+			nf.setMinimumFractionDigits(Integer.parseInt(Character.toString(DECIMALCOUNT)));
+
 			MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 			Language language = (Language)request.getAttribute("LANGUAGE");
 			List<TaxRate> taxRates = taxRateService.listByStore(store,language);
@@ -182,35 +180,25 @@ public class TaxRatesController {
 		return new ResponseEntity<String>(returnString,httpHeaders,HttpStatus.OK);
 	}
 
-	//TODO: candidate for extraction to tax-service
+	//TODO: candidate for extraction to tax-service -- DOING
 	@PreAuthorize("hasRole('TAX')")
 	@RequestMapping(value="/admin/tax/taxrates/save.html", method=RequestMethod.POST)
 	public String saveTaxRate(@Valid @ModelAttribute("taxRate") TaxRate taxRate, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
 		
 		setMenu(model, request);
-		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-
 		Language language = (Language)request.getAttribute("LANGUAGE");
-		
 		this.validateTaxRate(model, taxRate, result, store, language, locale);
-		
 		if (result.hasErrors()) {
-
 			return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxRates;
-
 		}
-
-		
-		taxRateService.create(taxRate);
-		
-		List<TaxRate> taxRates = taxRateService.listByStore(store);
+		//taxRateService.create(taxRate);
+		taxServiceClient.createTaxRate(taxRate, store);
+		//List<TaxRate> taxRates = taxRateService.listByStore(store);
+		List<TaxRate> taxRates = taxServiceClient.listTaxRatesByStore(store);
 		
 		model.addAttribute("success","success");
 		model.addAttribute("taxRates", taxRates);
-		
-		
-		
 		
 		return com.salesmanager.shop.admin.controller.ControllerConstants.Tiles.Tax.taxRates;
 		
