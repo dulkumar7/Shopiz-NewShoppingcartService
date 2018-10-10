@@ -1,5 +1,6 @@
 package com.shopizer.shop.services.taxservice.restcontroller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.shopizer.shop.services.taxservice.mapper.TaxAppObjectMapper;
 import com.shopizer.shop.services.taxservice.model.*;
 import com.shopizer.shop.services.taxservice.service.TaxAppService;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +60,23 @@ public class TaxClassRestController {
     }
 
     @GetMapping("/list-full/{storeId}")
+    @HystrixCommand(fallbackMethod = "retrieveTaxClassListFullFallBack")
     public String retrieveTaxClassListFull(@PathVariable Integer storeId) {
         logger.info("START: TaxClassRestController.retrieveTaxClassListFull() -- input = ", storeId);
         List<TaxClass> taxClasses = taxAppService.listTaxClassByStore(storeId);
         String result = taxAppObjectMapper.convertObjectToString(taxClasses);
         logger.info("START: TaxClassRestController.retrieveTaxClassListFull() -- output = ", result);
         return result;
+    }
+
+    /**
+     * FallBack for retrieveTaxClassListFull
+     * @return String
+     */
+    public String retrieveTaxClassListFullFallBack() {
+        List<TaxClass> taxclassList = new ArrayList<>();
+        taxclassList.add(new TaxClass());
+        return taxAppObjectMapper.convertObjectToString(taxclassList);
     }
 
     @GetMapping("/storeId/{storeId}/tax-code/{code}")
@@ -94,6 +107,7 @@ public class TaxClassRestController {
     }
 
     @PutMapping("/update")
+    @HystrixCommand(fallbackMethod = "updateClassFallBack")
     public String updateClass(@RequestBody Map<String, String> reqBody) {
     	logger.info("START: TaxClassRestController.updateClass() -- input = ", reqBody);
         TaxClass taxClassOut = null;
@@ -108,16 +122,33 @@ public class TaxClassRestController {
             logger.error("Failed to create TaxClass ", ex);
         }
         logger.info("END: TaxClassRestController.updateClass() -- output = ", taxClassOut);
-        return (taxClassOut != null ? "UPDATE SUCCESS":"UPDATE FAILED");
+        return "UPDATE SUCCESS";
+    }
+
+    /**
+     * FallBack method of the endpoint above
+     * @return String
+     */
+    public String updateClassFallBack() {
+        return "UPDATE FAILED";
     }
 
     @GetMapping("/id/{taxClassId}")
+    @HystrixCommand(fallbackMethod = "retrieveTaxClassByIdFallBack")
     public String retrieveTaxClassById(@PathVariable Long taxClassId) {
     	logger.info("START: TaxClassRestController.retrieveTaxClassById() -- input = ", taxClassId);
         TaxClass taxResp = taxAppService.getTaxClassById(taxClassId);
         String returnValue = taxAppObjectMapper.convertObjectToString(taxResp);
         logger.info("END: TaxClassRestController.retrieveTaxClassById() -- output = ", returnValue);
         return returnValue;
+    }
+
+    /**
+     * FallBack method for retrieveTaxClassById
+     * @return String
+     */
+    public String retrieveTaxClassByIdFallBack() {
+        return taxAppObjectMapper.convertObjectToString(new TaxClass());
     }
 
     @GetMapping("/products/id/{taxClassId}")

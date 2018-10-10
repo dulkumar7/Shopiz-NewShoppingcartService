@@ -9,5 +9,6 @@ applications:
   - shopizer-config-server
   - shopizer-database
   - shopizer-service-registry
+  - shopizer-circuit-breaker
   env:
     SPRING_PROFILES_ACTIVE: devtaxservice

@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,10 +53,6 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 
     @Autowired
     private DataSource dataSource;
-
-  /* @Autowired
-   @Qualifier("shopizer-database")
-   private DataSource shopizerDatabase;*/
 
     @Inject
     private TextEncryptor textEncryptor;
@@ -136,8 +133,8 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 
     }
 
-    //@LoadBalanced
     @Bean
+    @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
@@ -150,16 +147,6 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
         return mapper;
     }
 
-    /*@Bean
-    public Cloud cloud() {
-        return new CloudFactory().getCloud();
-    }*/
-
-   /* @Bean
-    public DataSource dataSource() {
-        DataSource dataSource = cloud().getServiceConnector("shopizer-database", DataSource.class, null);
-        return dataSource;
-    }*/
 
 
 }
