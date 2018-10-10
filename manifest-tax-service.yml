@@ -6,15 +6,8 @@ applications:
   - route: shopizer-tax-service-hb-nttd.cfapps.io
   instances: 1
   services:
+  - shopizer-config-server
   - shopizer-database
   - shopizer-service-registry
   env:
-    DATABASE_URL : mysql://b45457875dac2e:1e5ae9d8@us-cdbr-iron-east-01.cleardb.net:3306/ad_577d5fea9462bc3?reconnect=true
-    spring.datasource.username : user
-    spring.datasource.password : test
-    spring.datasource.testWhileIdle : true
-    spring.datasource.validationQuery : SELECT 1
-    spring.jpa.show-sql : true
-    spring.jpa.hibernate.ddl-auto : none
-    spring.jpa.hibernate.naming-strategy : org.hibernate.cfg.ImprovedNamingStrategy
-    spring.jpa.properties.hibernate.dialect : org.hibernate.dialect.MySQL5Dialect
+    SPRING_PROFILES_ACTIVE: devtaxservice

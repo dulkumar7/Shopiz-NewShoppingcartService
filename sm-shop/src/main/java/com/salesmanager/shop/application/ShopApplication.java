@@ -1,11 +1,14 @@
 package com.salesmanager.shop.application;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
-@EnableEurekaClient
+@RefreshScope
+@EnableDiscoveryClient
 @SpringBootApplication
 public class ShopApplication extends SpringBootServletInitializer {
 	

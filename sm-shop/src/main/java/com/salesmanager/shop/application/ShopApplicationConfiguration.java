@@ -8,17 +8,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -42,6 +39,7 @@ import com.salesmanager.core.constants.SchemaConstant;
 @Import(CoreApplicationConfiguration.class)//import sm-core configurations
 @ImportResource({"classpath:/spring/shopizer-shop-context.xml"})
 @EnableWebSecurity
+@Profile("cloud")
 public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -51,9 +49,13 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 	
 	@Value("${facebook.app.secret}")
 	private String facebookAppSecret;
-	
-    @Inject
+
+    @Autowired
     private DataSource dataSource;
+
+  /* @Autowired
+   @Qualifier("shopizer-database")
+   private DataSource shopizerDatabase;*/
 
     @Inject
     private TextEncryptor textEncryptor;
@@ -63,7 +65,6 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 		String workingDir = System.getProperty("user.dir");
 		System.out.println("Current working directory : " + workingDir);
 	}
-	
 
     /**
      * Configure TilesConfigurer.
@@ -128,14 +129,14 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
     
     @Bean
     public UsersConnectionRepository socialUsersConnectionRepository() {
-    	JdbcUsersConnectionRepository conn = new JdbcUsersConnectionRepository(dataSource, authenticationServiceLocator(), 
+    	JdbcUsersConnectionRepository conn = new JdbcUsersConnectionRepository(dataSource, authenticationServiceLocator(),
             textEncryptor);
     	conn.setTablePrefix(SchemaConstant.SALESMANAGER_SCHEMA + ".");
     	return conn;
 
     }
 
-    @LoadBalanced
+    //@LoadBalanced
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -148,6 +149,17 @@ public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
         mapper.configure(DeserializationFeature.EAGER_DESERIALIZER_FETCH, true);
         return mapper;
     }
+
+    /*@Bean
+    public Cloud cloud() {
+        return new CloudFactory().getCloud();
+    }*/
+
+   /* @Bean
+    public DataSource dataSource() {
+        DataSource dataSource = cloud().getServiceConnector("shopizer-database", DataSource.class, null);
+        return dataSource;
+    }*/
 
 
 }
