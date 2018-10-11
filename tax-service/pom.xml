@@ -24,7 +24,8 @@
 		<simple-json-version>1.1.1</simple-json-version>
 		<swagger2-version>2.6.1</swagger2-version>
 		<flyway-version>3.0</flyway-version>
-		<spring-cloud-version>Edgware.SR4</spring-cloud-version>
+		<tax-service-version>1.00-SNAPSHOT</tax-service-version>
+		<!--<spring-cloud-version>Edgware.SR4</spring-cloud-version>-->
 	</properties>
 
 	<dependencies>
@@ -34,33 +35,35 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!--=================== PCF SPRING CLOUD DEPENDENCIES =============================-->
-		<!--<dependency>
-			<groupId>io.pivotal.spring.cloud</groupId>
-			<artifactId>spring-cloud-services-starter-config-client</artifactId>
-		</dependency>-->
-
+		<!--=================== SPRING CLOUD DEPENDENCIES =============================-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.pivotal.spring.cloud</groupId>
+			<artifactId>spring-cloud-services-starter-config-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.pivotal.spring.cloud</groupId>
+			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
+		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+			<groupId>io.pivotal.spring.cloud</groupId>
+			<artifactId>spring-cloud-services-starter-circuit-breaker</artifactId>
 		</dependency>
 
 		<!--<dependency>
-			<groupId>io.pivotal.spring.cloud</groupId>
-			<artifactId>spring-cloud-services-starter-service-registry</artifactId>
-		</dependency>-->
-
-		<!--<dependency>
-			<groupId>io.pivotal.spring.cloud</groupId>
-			<artifactId>spring-cloud-services-starter-circuit-breaker</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
 		</dependency>-->
 		<!-- ============================================================================ -->
 
@@ -92,7 +95,7 @@
 
 	</dependencies>
 
-	<dependencyManagement>
+	<!--<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>io.pivotal.spring.cloud</groupId>
@@ -109,7 +112,7 @@
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement>-->
 
 	<build>
 		<plugins>
@@ -118,6 +121,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>shopizer-tax-service-${tax-service-version}</finalName>
 	</build>
 
 

@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.hibernate.annotations.Type;
+
 import com.salesmanager.core.constants.SchemaConstant;
 import com.salesmanager.core.model.generic.SalesManagerEntity;
 import com.salesmanager.core.model.order.Order;
@@ -38,6 +40,7 @@ public class OrderAttribute extends SalesManagerEntity<Long, OrderAttribute> {
 	private String key;
 	
 	@Column (name ="VALUE", nullable=false)
+	@Type(type = "org.hibernate.type.TextType")
 	private String value;
 	
 	@ManyToOne(targetEntity = Order.class)

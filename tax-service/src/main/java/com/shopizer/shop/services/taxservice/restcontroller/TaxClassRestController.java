@@ -29,6 +29,7 @@ public class TaxClassRestController {
     private TaxAppObjectMapper taxAppObjectMapper;
 
     @GetMapping("/list-partial/{storeId}")
+    @HystrixCommand(fallbackMethod = "retrieveClassListFallBack")
     public String retrieveClassList(@PathVariable Integer storeId) {
         logger.info("START: TaxClassRestController.retrieveClassList() -- input = ", storeId);
         AjaxResponse resp = new AjaxResponse();
@@ -57,6 +58,15 @@ public class TaxClassRestController {
         return returnString;
     }
 
+    /**
+     * FallBack method for TaxClassRestController.retrieveClassList()
+     * @param storeId
+     * @return
+     */
+    public String retrieveClassListFallBack(Integer storeId) {
+        return new AjaxResponse().toJSONString();
+    }
+
     @GetMapping("/list-full/{storeId}")
     @HystrixCommand(fallbackMethod = "retrieveTaxClassListFullFallBack")
     public String retrieveTaxClassListFull(@PathVariable Integer storeId) {
@@ -71,7 +81,7 @@ public class TaxClassRestController {
      * FallBack for retrieveTaxClassListFull
      * @return String
      */
-    public String retrieveTaxClassListFullFallBack() {
+    public String retrieveTaxClassListFullFallBack(Integer storeId) {
         List<TaxClass> taxclassList = new ArrayList<>();
         taxclassList.add(new TaxClass());
         return taxAppObjectMapper.convertObjectToString(taxclassList);
@@ -127,7 +137,7 @@ public class TaxClassRestController {
      * FallBack method of the endpoint above
      * @return String
      */
-    public String updateClassFallBack() {
+    public String updateClassFallBack(Map<String, String> reqBody) {
         return "UPDATE FAILED";
     }
 
@@ -145,7 +155,7 @@ public class TaxClassRestController {
      * FallBack method for retrieveTaxClassById
      * @return String
      */
-    public String retrieveTaxClassByIdFallBack() {
+    public String retrieveTaxClassByIdFallBack(Long taxClassId) {
         return taxAppObjectMapper.convertObjectToString(new TaxClass());
     }
 

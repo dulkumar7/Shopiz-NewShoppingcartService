@@ -39,7 +39,6 @@ import com.salesmanager.core.constants.SchemaConstant;
 @Import(CoreApplicationConfiguration.class)//import sm-core configurations
 @ImportResource({"classpath:/spring/shopizer-shop-context.xml"})
 @EnableWebSecurity
-@Profile("cloud")
 public class ShopApplicationConfiguration extends WebMvcConfigurerAdapter{
 
 	protected final Log logger = LogFactory.getLog(getClass());

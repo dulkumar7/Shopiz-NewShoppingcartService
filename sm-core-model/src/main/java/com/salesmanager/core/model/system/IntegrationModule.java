@@ -28,8 +28,6 @@ import com.salesmanager.core.model.generic.SalesManagerEntity;
 @Entity
 @EntityListeners(value = AuditListener.class)
 @Table(name = "MODULE_CONFIGURATION", schema= SchemaConstant.SALESMANAGER_SCHEMA)
-
-
 public class IntegrationModule extends SalesManagerEntity<Long, IntegrationModule> implements Serializable, Auditable {
 
 	
@@ -56,11 +54,11 @@ public class IntegrationModule extends SalesManagerEntity<Long, IntegrationModul
 	private String regions;
 	
 	@Column(name="CONFIGURATION")
-	//@Type(type = "org.hibernate.type.StringClobType")
+	@Type(type = "org.hibernate.type.TextType")
 	private String configuration;
 	
 	@Column(name="DETAILS")
-	//@Type(type = "org.hibernate.type.StringClobType")
+	@Type(type = "org.hibernate.type.TextType")
 	private String configDetails;
 	
 	@Column(name="TYPE")
@@ -82,34 +80,24 @@ public class IntegrationModule extends SalesManagerEntity<Long, IntegrationModul
 	@Transient
 	private Map<String,ModuleConfig> moduleConfigs = new HashMap<String,ModuleConfig>();
 	
-	
 	@Transient
 	private Map<String,String> details = new HashMap<String,String>();
 
-	
 	public Map<String, String> getDetails() {
 		return details;
 	}
-
-
 
 	public void setDetails(Map<String, String> details) {
 		this.details = details;
 	}
 
-
-
 	@Embedded
 	private AuditSection auditSection = new AuditSection();
-
-
 
 	@Override
 	public AuditSection getAuditSection() {
 		return auditSection;
 	}
-
-
 
 	@Override
 	public void setAuditSection(AuditSection audit) {
@@ -117,112 +105,75 @@ public class IntegrationModule extends SalesManagerEntity<Long, IntegrationModul
 		
 	}
 
-
-
 	@Override
 	public Long getId() {
 		return id;
 	}
-
-
 
 	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
-
 	public String getModule() {
 		return module;
 	}
-
-
 
 	public void setModule(String module) {
 		this.module = module;
 	}
 
-
-
 	public String getRegions() {
 		return regions;
 	}
-
-
 
 	public void setRegions(String regions) {
 		this.regions = regions;
 	}
 
-
-
 	public String getConfiguration() {
 		return configuration;
 	}
-
-
 
 	public void setConfiguration(String configuration) {
 		this.configuration = configuration;
 	}
 
-
-
 	public void setRegionsSet(Set<String> regionsSet) {
 		this.regionsSet = regionsSet;
 	}
-
-
 
 	public Set<String> getRegionsSet() {
 		return regionsSet;
 	}
 
-
-
-
 	public void setCode(String code) {
 		this.code = code;
 	}
-
-
 
 	public String getCode() {
 		return code;
 	}
 
-
-
 	public void setModuleConfigs(Map<String,ModuleConfig> moduleConfigs) {
 		this.moduleConfigs = moduleConfigs;
 	}
-
-
 
 	public Map<String,ModuleConfig> getModuleConfigs() {
 		return moduleConfigs;
 	}
 
-
-
 	public void setImage(String image) {
 		this.image = image;
 	}
-
-
 
 	public String getImage() {
 		return image;
 	}
 
-
-
 	public void setCustomModule(boolean customModule) {
 		this.customModule = customModule;
 	}
-
-
 
 	public boolean isCustomModule() {
 		return customModule;
@@ -232,19 +183,13 @@ public class IntegrationModule extends SalesManagerEntity<Long, IntegrationModul
 		return configDetails;
 	}
 
-
-
 	public void setConfigDetails(String configDetails) {
 		this.configDetails = configDetails;
 	}
 
-
-
 	public void setType(String type) {
 		this.type = type;
 	}
-
-
 
 	public String getType() {
 		return type;

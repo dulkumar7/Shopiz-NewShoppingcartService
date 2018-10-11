@@ -37,8 +37,8 @@
 		<c3p0-version>0.9.5.2</c3p0-version>
 		<org.elasticsearch-version>2.4.1</org.elasticsearch-version>
 		<infinispan.version>6.0.2.Final</infinispan.version>
-		<mysql-jdbc-version>8.0.12</mysql-jdbc-version>
 		<simple-json-version>1.1.1</simple-json-version>
+		<spring-cloud-version>Edgware.SR4</spring-cloud-version>
 	</properties>
 
 	<dependencies>
@@ -62,14 +62,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.5</version>
-		</dependency>
-
-
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-jdbc-version}</version>
 		</dependency>
 
 		<!-- Jackson JSON Processor -->
@@ -142,13 +134,13 @@
 		<module>circuit-breaker-dashboard</module>
 	</modules>
 
-	<repositories>
+	<!--<repositories>
 		<repository>
 			<id>spring-releases</id>
 			<name>Spring Releases</name>
 			<url>https://repo.spring.io/libs-release</url>
 		</repository>
-		<!-- Milestone repo -->
+		&lt;!&ndash; Milestone repo &ndash;&gt;
 		<repository>
 			<id>spring-milestone</id>
 			<name>Spring Milestone</name>
@@ -159,21 +151,33 @@
 			<name>JBoss Maven Release Repository</name>
 			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
 		</repository>
-	</repositories>
+	</repositories>-->
 
-	<pluginRepositories>
+	<!--<pluginRepositories>
 		<pluginRepository>
 			<id>spring-releases</id>
 			<name>Spring Releases</name>
 			<url>https://repo.spring.io/libs-release</url>
 		</pluginRepository>
-	</pluginRepositories>
+	</pluginRepositories>-->
 
 	<dependencyManagement>
 		<dependencies>
-
+			<dependency>
+				<groupId>io.pivotal.spring.cloud</groupId>
+				<artifactId>spring-cloud-services-dependencies</artifactId>
+				<version>1.4.1.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud-version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 
 </project>
