@@ -30,7 +30,7 @@
 
 			<beans:property name="dataSource" ref="dataSource" />
 			<!--<beans:property name="persistenceUnitName" value="default"/>-->
-			<beans:property name="packagesToScan" value="com.salesmanager.core.model" />
+			<!--<beans:property name="packagesToScan" value="com.salesmanager.core.model" />-->
 			<beans:property name="jpaVendorAdapter">
 				<beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 					<beans:property name="showSql" value="true" />
