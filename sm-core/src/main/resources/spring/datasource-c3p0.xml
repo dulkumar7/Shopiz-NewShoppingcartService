@@ -10,7 +10,7 @@
 		p:preferredTestQuery="${db.preferredTestQuery}" p:testConnectionOnCheckin="true"
 		p:idleConnectionTestPeriod="300" destroy-method="close" />-->
 
-	<!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-		  p:driverClassName="${db.driverClass}" p:url="${db.jdbcUrl}" p:username="${db.user}" p:password="${db.password}" />-->
+	<bean primary="true" id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		  p:driverClassName="${db.driverClass}" p:url="${db.jdbcUrl}" p:username="${db.user}" p:password="${db.password}" />
 
 </beans>
