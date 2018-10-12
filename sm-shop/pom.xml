@@ -23,6 +23,7 @@
         <!-- Need to use the latest milestone in order to logon with latest FB app version -->
         <spring-social-facebook.version>2.0.3.RELEASE</spring-social-facebook.version>
 		<servlet-api-version>4.0.1</servlet-api-version>
+		<tomcat-embed-version>8.5.34</tomcat-embed-version>
 	</properties>
 
 	<dependencies>
@@ -52,7 +53,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-			<scope>provided</scope>
         </dependency>
 
 		<dependency>
@@ -128,24 +128,35 @@
 			<artifactId>spring-cloud-services-starter-circuit-breaker</artifactId>
 		</dependency>
 		<!--=========================================================================-->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
 			<artifactId>ecj</artifactId>
 			<version>4.2.2</version>
 		</dependency>
 
+		&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core &ndash;&gt;
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>${tomcat-embed-version}</version>
+		</dependency>-->
+
 		<dependency>
         	<groupId>org.apache.tomcat.embed</groupId>
         	<artifactId>tomcat-embed-jasper</artifactId>
-			<version>8.5.34</version>
+			<version>${tomcat-embed-version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.tomcat.embed</groupId>
+					<artifactId>tomcat-embed-core</artifactId>
+				</exclusion>
+			</exclusions>
     	</dependency>
 
-		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet-api-version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Add Apache Tiles into the mix -->
@@ -173,25 +184,19 @@
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
+			<version>2.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp.jstl</groupId>
 			<artifactId>jstl-api</artifactId>
-			<version>1.2</version>
+			<version>1.2.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl-api -->
-		<dependency>
-			<groupId>javax.servlet.jsp.jstl</groupId>
-			<artifactId>jstl-api</artifactId>
-			<version>1.2</version>
 		</dependency>
 
 		<!--<dependency>
