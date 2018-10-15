@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/rest/admin/tax/tax-configuration")
+@RequestMapping("/rest/tax-service/tax-configuration")
 public class TaxConfigurationRestController {
 
     @Autowired

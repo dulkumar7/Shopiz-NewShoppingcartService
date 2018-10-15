@@ -12,6 +12,7 @@ import com.salesmanager.core.model.tax.taxrate.TaxRate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,10 +25,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class TaxServiceClient {
 
     private static Logger logger = LoggerFactory.getLogger(TaxServiceClient.class);
-    //private String taxServiceUrl = "http://localhost:8301";
-    //private String taxServiceUrl = "//shopizer-tax-service";
-    //private String taxServiceUrl = "https://shopizer-tax-service-hb.cfapps.io";
-    //private String taxServiceUrl = "https://shopizer-tax-service-no-eureka-nttd.cfapps.io";
+
+    @Value("${TAX_SERVICE_URL}")
+    private String taxServiceUrl;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -36,12 +36,12 @@ public class TaxServiceClient {
     private ObjectMapper objectMapper;
 
     public URI getTaxServiceUrl(String endpoint) {
-        return UriComponentsBuilder.fromUriString("//shopizer-tax-service" + endpoint).build().toUri();
+        return UriComponentsBuilder.fromUriString(taxServiceUrl + endpoint).build().toUri();
     }
 
     public TaxConfiguration getTaxConfiguration(MerchantStore store) {
     	logger.info("START: TaxServiceClient.getTaxConfiguration()");
-    	final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-configuration/edit");
+    	final URI uri = getTaxServiceUrl("/rest/tax-service/tax-configuration/edit");
         logger.info("service-endpoint: ", uri);
         TaxConfiguration response = restTemplate.postForObject(uri, store.getId(), TaxConfiguration.class);
         logger.info("END: TaxServiceClient.getTaxConfiguration() -- return value = ", response);
@@ -57,7 +57,7 @@ public class TaxServiceClient {
         } catch(IOException ioe) {
             logger.error("Exception while parsing ", ioe);
         }
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-configuration/save");
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-configuration/save");
         logger.info("service-endpoint: ", uri);
         String result = restTemplate.postForObject(uri, reqBody, String.class);
         logger.info("END: TaxServiceClient.saveTaxConfiguration() -- return value = ",result);
@@ -65,7 +65,7 @@ public class TaxServiceClient {
 
     public String getTaxClassPartialList(MerchantStore store) {
         logger.info("START: TaxServiceClient.getTaxClassPartialList()");
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/list-partial/" + store.getId());
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/list-partial/" + store.getId());
         logger.info("service-endpoint: ", uri);
         String returnValue = restTemplate.getForObject(uri, String.class);
         logger.info("END: TaxServiceClient.getTaxClassPartialList() -- return value = ", returnValue);
@@ -74,7 +74,7 @@ public class TaxServiceClient {
 
     public List<TaxClass> getTaxClassFullList(MerchantStore store) {
         logger.info("START: TaxServiceClient.getTaxClassFullList()");
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/list-full/" + store.getId());
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/list-full/" + store.getId());
         logger.info("service-endpoint: ", uri);
         String returnValue = restTemplate.getForObject(uri, String.class);
         List<TaxClass> taxClassList = new ArrayList<>();
@@ -99,7 +99,7 @@ public class TaxServiceClient {
 
     public TaxClass getTaxClassByStoreAndCode(Integer storeId, String taxCode) {
         logger.info("START: TaxServiceClient.getTaxClassByStoreAndCode()");
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/storeId/" + storeId + "/tax-code/" + taxCode);
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/storeId/" + storeId + "/tax-code/" + taxCode);
         logger.info("service-endpoint: ", uri);
         TaxClass response = restTemplate.getForObject(uri, TaxClass.class);
         logger.info("END: TaxServiceClient.getTaxClassByStoreAndCode() -- return value = ", response);
@@ -116,7 +116,7 @@ public class TaxServiceClient {
             logger.error("Exception while parsing ", ioe);
         }
         logger.info("Request body: ", reqBody);
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/create");
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/create");
         logger.info("service-endpoint: ", uri);
         TaxClass response = restTemplate.postForObject(uri, reqBody, TaxClass.class);
         logger.info("END: TaxServiceClient.createTaxClass() -- return value = ", response);
@@ -133,7 +133,7 @@ public class TaxServiceClient {
             logger.error("Exception while parsion ", ioe);
         }
         logger.info("Request body: ", reqBody);
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/update");
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/update");
         logger.info("service-endpoint: ", uri);
         restTemplate.put(uri, reqBody);
         logger.info("END: TaxServiceClient.updateTaxClass()");
@@ -141,7 +141,7 @@ public class TaxServiceClient {
 
     public TaxClass getTaxClassById(long taxClassId) {
         logger.info("START: TaxServiceClient.getTaxClassById()");
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/id/" + taxClassId);
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/id/" + taxClassId);
         logger.info("service-endpoint: ", uri);
         String response = restTemplate.getForObject(uri, String.class);
         TaxClass taxClass = null;
@@ -156,7 +156,7 @@ public class TaxServiceClient {
 
     public List<Product> listProductsByTaxClass(TaxClass taxClass) {
         logger.info("START: TaxServiceClient.listProductsByTaxClass()");
-        final URI uri =  getTaxServiceUrl("/rest/admin/tax/tax-class/products/id/" + taxClass.getId()) ;
+        final URI uri =  getTaxServiceUrl("/rest/tax-service/tax-class/products/id/" + taxClass.getId()) ;
         logger.info("service-endpoint: ", uri);
         List<Product> products = restTemplate.getForObject(uri, List.class);
         logger.info("END: TaxServiceClient.listProductsByTaxClass()", products);
@@ -165,7 +165,7 @@ public class TaxServiceClient {
 
     public void deleteTaxClass(TaxClass taxClass) {
         logger.info("START: TaxServiceClient.deleteTaxClass()");
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-class/delete/" + taxClass.getId());
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-class/delete/" + taxClass.getId());
         logger.info("service-endpoint: ", uri);
         restTemplate.delete(uri);
         logger.info("END: TaxServiceClient.deleteTaxClass()");
@@ -174,7 +174,7 @@ public class TaxServiceClient {
     public List<TaxRate> listTaxRatesByStore(MerchantStore store) {
         logger.info("START: TaxServiceClient.listTaxRatesByStore() -- input = ", store);
         List<TaxRate> result = new ArrayList<>();
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-rates/list-by-store/" + store.getId());
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-rates/list-by-store/" + store.getId());
         logger.info("service-endpoint: ", uri);
         String taxRatesListStr = restTemplate.getForObject(uri, String.class);
         try {
@@ -188,7 +188,7 @@ public class TaxServiceClient {
 
     public TaxRate createTaxRate(TaxRate taxRate, MerchantStore store) {
         logger.info("START: TaxServiceClient.createTaxRate() -- input = ", taxRate);
-        final URI uri = getTaxServiceUrl("/rest/admin/tax/tax-rates/create");
+        final URI uri = getTaxServiceUrl("/rest/tax-service/tax-rates/create");
         Map<String, String> reqBody = new HashMap<>();
         try {
             reqBody.put("taxRate", objectMapper.writeValueAsString(taxRate));

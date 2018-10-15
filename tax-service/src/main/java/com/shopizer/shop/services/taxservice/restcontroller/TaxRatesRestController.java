@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/rest//admin/tax/tax-rates")
+@RequestMapping("/rest/tax-service/tax-rates")
 public class TaxRatesRestController {
 
     private Logger logger = LoggerFactory.getLogger(TaxRatesRestController.class);

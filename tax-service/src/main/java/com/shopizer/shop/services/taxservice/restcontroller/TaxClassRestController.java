@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/rest/admin/tax/tax-class")
+@RequestMapping("/rest/tax-service/tax-class")
 public class TaxClassRestController {
 
     private Logger logger = LoggerFactory.getLogger("TaxClassRestController");
