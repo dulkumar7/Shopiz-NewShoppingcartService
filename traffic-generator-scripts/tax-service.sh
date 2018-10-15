@@ -21,8 +21,8 @@ do
         echo "---> HIT COUNT --->: ${index}"
         curl ${endpoint}
     done
-    if [ $index -lt ${HIT_COUNT} ];then
-        echo "---> Hit count reached...Moving to next endpoint..."
+    if [ $index -eq ${HIT_COUNT} ];then
+        echo "---> ${endpoint} hit ${HIT_COUNT} times...Moving to the next endpoint..."
     fi
 done
 echo "---> Test of TAX-SERVICE completed...Exiting..."
