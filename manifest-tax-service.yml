@@ -10,5 +10,7 @@ applications:
   - shopizer-database
   - shopizer-service-registry
   - shopizer-circuit-breaker
+  buildpacks:
+  - java_buildpack
   env:
     SPRING_PROFILES_ACTIVE: devtaxservice

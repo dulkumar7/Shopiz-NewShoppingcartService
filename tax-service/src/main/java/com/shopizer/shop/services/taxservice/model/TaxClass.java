@@ -54,6 +54,7 @@ public class TaxClass extends SalesManagerEntity<Long, TaxClass> {
 
 
     @OneToMany(mappedBy = "taxClass")
+    @JsonBackReference(value = "taxRates")
     private List<TaxRate> taxRates = new ArrayList<TaxRate>();
 
     public TaxClass() {

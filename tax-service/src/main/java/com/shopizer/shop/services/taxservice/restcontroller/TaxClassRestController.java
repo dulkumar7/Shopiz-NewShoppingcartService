@@ -83,7 +83,6 @@ public class TaxClassRestController {
      */
     public String retrieveTaxClassListFullFallBack(Integer storeId) {
         List<TaxClass> taxclassList = new ArrayList<>();
-        taxclassList.add(new TaxClass());
         return taxAppObjectMapper.convertObjectToString(taxclassList);
     }
 
